@@ -1,0 +1,61 @@
+{
+  "comparedTo": "0.1.3 source snapshot",
+  "passed": true,
+  "files": [
+    {
+      "file": "src/importer.ts",
+      "unchanged": true,
+      "sha256": "2a301c21bc398ccf63f649005f399bc86199dbba13b296d2350875a4b85927a9"
+    },
+    {
+      "file": "src/normalize.ts",
+      "unchanged": true,
+      "sha256": "bec51991e2e54c8f28df77858a0415559a2f4e6b5415db4ccb837642bbb3971e"
+    },
+    {
+      "file": "src/png.ts",
+      "unchanged": true,
+      "sha256": "5c571b94084325e9a4689859f274d8b21f339558beb50149f048dfa8d641dc36"
+    },
+    {
+      "file": "src/raster-effects.ts",
+      "unchanged": true,
+      "sha256": "25daf02f74e82642fb713a5e676103a3c9d5e541b25f4841cf208aa3e0a94391"
+    },
+    {
+      "file": "src/raster.ts",
+      "unchanged": true,
+      "sha256": "f399f2bcf91c364b905db2a7cebb9b67dfba74470422f37c2d3237923e9f6d1d"
+    },
+    {
+      "file": "src/styles.ts",
+      "unchanged": true,
+      "sha256": "21b9fc45f95bb9ac5f2952249ee7e406dd71f6c4abe67089f8bb8afdec54bccd"
+    },
+    {
+      "file": "src/text-paths.ts",
+      "unchanged": true,
+      "sha256": "ee0e4f817ec86a9bf49cef8110d40edaf3d2067fe610d602306b2f174c3cab85"
+    },
+    {
+      "file": "src/types.ts",
+      "unchanged": true,
+      "sha256": "9b0ff16c48884d9fc1fccfc30bdec1a1c9264f2b41e898018b11bb80ae8fd55c"
+    },
+    {
+      "file": "src/font-search.ts",
+      "unchanged": true,
+      "sha256": "a44f8121f4d37a5b7723017063f2ce1ee63fce71d8bdeadccb411bb439b3b774"
+    },
+    {
+      "file": "src/code.ts",
+      "versionStringOnly": true
+    },
+    {
+      "file": "src/diagnostics.js",
+      "versionStringOnly": true
+    }
+  ],
+  "inputCapBytes": 1500000000,
+  "pipelineChange": "Cooperative cancellation checks only; capacity guard unchanged"
+}

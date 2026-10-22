@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "runtime": "Node VM executing real bundled helper and UI; minimal DOM, stub conversion and Figma host; no browser layout, real keyboard, or real Figma validation",
+  "tests": [
+    "Empty query returns every font in original order",
+    "Whitespace-only query returns every font",
+    "Latin family search is case-insensitive, partial, and trimmed",
+    "Chinese family substring search",
+    "Latin style substring search",
+    "Chinese style substring search",
+    "Whitespace-separated family and style tokens search together",
+    "Copy-pasted displayed family and style label searches correctly",
+    "Full-width Latin input and ideographic spaces normalize consistently",
+    "No match returns an empty result",
+    "Empty available-font list is handled safely",
+    "Frozen font array and objects remain unchanged across repeated searches",
+    "Every font row has a named search input, named destination selector, clear button, and live result status",
+    "Per-row filtering preserves current mapping and other rows, while retaining the selected nonmatching font",
+    "No-match search keeps the chosen font and shows an explicit empty-result state",
+    "Clear restores all choices, preserves selection, and returns search focus",
+    "Escape clears a nonempty query with focus retained; empty-search Escape remains available to the host",
+    "Choosing a filtered result uses the correct original font, rather than the result-array index",
+    "Automatic fallback option stays automatic through search and clear",
+    "Source font mappings survive include-hidden toggles and row rebuilding",
+    "Search, selection, and clear controls lock while busy and restore afterward",
+    "Real UI import flow forwards selected mappings unchanged while a search query is active"
+  ]
+}

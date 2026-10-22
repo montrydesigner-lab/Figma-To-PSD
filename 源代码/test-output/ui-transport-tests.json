@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "runtime": "Node VM executing bundled real UI source; minimal DOM, stub pipeline and host; no Figma or browser rendering validation",
+  "tests": [
+    "Startup ping and fonts accept null-source correlated ACKs",
+    "Tiny transport flow succeeds with null ACK source",
+    "Tiny transport flow succeeds with parent ACK source",
+    "Tiny transport flow succeeds with self ACK source",
+    "Tiny transport flow succeeds with relay ACK source",
+    "Cancel stalled ping immediately, reject guessed/unknown ACKs, ignore late success",
+    "Cancel stalled begin immediately, reject guessed/unknown ACKs, ignore late success",
+    "Cancel stalled asset immediately, reject guessed/unknown ACKs, ignore late success",
+    "Cancel stalled import immediately, reject guessed/unknown ACKs, ignore late success",
+    "Unresponsive handshake fails before conversion (production 8s timer accelerated to 150ms)",
+    "Unresponsive begin fails before assets/import"
+  ]
+}

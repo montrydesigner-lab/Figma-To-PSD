@@ -1,0 +1,11 @@
+import { build } from 'esbuild';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+await mkdir('dist', {recursive: true});
+await build({entryPoints:['src/code.ts'], outfile:'dist/code.js', bundle:true, target:'es2017', platform:'browser', minify:false});
+const ui = await build({entryPoints:['src/ui.ts'], bundle:true, target:'es2020', platform:'browser', minify:true, write:false});
+const diagnostics = await readFile('src/diagnostics.js','utf8');
+const html = (await readFile('src/ui.html','utf8')).replace('<!--DIAGNOSTICS_SCRIPT-->', () => `<script>${diagnostics}</script>`);
+await writeFile('dist/ui.html', html.replace('<!--APP_SCRIPT-->', () => `<script>${ui.outputFiles[0].text.replace(/<\/script/gi,'<\\/script')}</script>`));
+await build({entryPoints:['src/importer.ts'], outfile:'dist/importer-test.js', bundle:true, format:'iife',globalName:'PSDBridge',target:'es2017', platform:'browser'});
+await build({entryPoints:['src/pipeline.ts'], outfile:'dist/pipeline.cjs', bundle:true, platform:'node',format:'cjs',external:['ag-psd']});
+console.log('Built offline plugin and test bundles.');

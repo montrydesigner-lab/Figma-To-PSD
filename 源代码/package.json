@@ -1,0 +1,26 @@
+{
+  "name": "psd-to-figma",
+  "version": "0.1.4",
+  "description": "Offline PSD/PSB to editable Figma layers",
+  "scripts": {
+    "test": "node scripts/test-fixtures.mjs && node scripts/test-importer.mjs && node scripts/test-raster-effects.mjs && node scripts/test-text-paths.mjs && node scripts/test-bridge.mjs && node scripts/test-ui-transport.mjs && node scripts/test-hidden.mjs && node scripts/test-diagnostics.mjs && node scripts/test-font-search.mjs && node scripts/test-source-reset.mjs && node scripts/test-input-guard.mjs",
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "test:ui": "node scripts/test-ui.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "dependencies": {
+    "ag-psd": "31.0.2",
+    "fflate": "0.8.2"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.139.0",
+    "@napi-rs/canvas": "^1.0.9",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  },
+  "private": true
+}

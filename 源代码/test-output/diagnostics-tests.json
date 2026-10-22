@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "scope": "Node VM of standalone diagnostic script with synthetic host/timers; not a live Figma result",
+  "tests": [
+    "Independent correlated probe accepts and classifies parent/top/self/null/relay/undefined host delivery",
+    "Unknown/prototype request IDs ignored; missing main marked unresponsive after one bounded probe",
+    "Main bootstrap plus missing ACK distinguished; manual read-only probe retries once",
+    "Mismatched UI/main versions surfaced explicitly",
+    "Diagnostics stays functional when application bundle throws",
+    "Built UI includes independent diagnostic script before application and boot marker for main injection",
+    "Real main bundle injects marker after handler registration; startup works even without browser timers"
+  ]
+}

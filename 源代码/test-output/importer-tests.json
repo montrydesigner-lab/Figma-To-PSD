@@ -1,0 +1,14 @@
+{
+  "passed": 8,
+  "scope": "Public API mock invariants; no pixel-rendering claim",
+  "tests": [
+    "Exact canvas, font discovery/substitution, weighted CJK fallback, scaled typography, editable rich ranges, unrelated nodes preserved",
+    "Mid-import cancellation rolls back every new node without deleting unrelated content",
+    "API failure rollback includes unattached/intermediate nodes",
+    "Editable cubic path text preserves full overflow content, source geometry, reversed segment anchor, scaled typography and consumed-vector lifecycle",
+    "Point text aligns actual glyph ink to source pixels before effects and clipping without changing font size",
+    "Photoshop top-first overlay stacks reverse only at native text/range/shape/stroke assignment; source paint order remains unchanged",
+    "Missing assets, non-finite dimensions, duplicate IDs, invalid text ranges rejected before mutations",
+    "Artboards clip content and children retain source absolute-to-local coordinates"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "tests": [
+    {
+      "name": "PNG lossless alpha and hidden RGB",
+      "passed": true
+    },
+    {
+      "format": "psd",
+      "fileBytes": 46052,
+      "passed": true,
+      "pipelineNodes": 7,
+      "assets": 7
+    },
+    {
+      "format": "psb",
+      "fileBytes": 47824,
+      "passed": true,
+      "pipelineNodes": 7,
+      "assets": 7
+    },
+    {
+      "name": "ZIP single PSD/PSB and invalid signature",
+      "passed": true
+    }
+  ],
+  "summary": "PSD/PSB pipeline preserves hierarchy, editable mixed text, enabled effects, hidden flags, clipping metadata, mask pixels, RGBA including alpha=0 RGB, and the correct full-resolution PSB composite."
+}

@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "passedCount": 23,
+  "failedCount": 0,
+  "runtime": "Node VM executing bundled real UI plus real inspectFile orchestration; minimal DOM, deferred inspection fixture, stub parser/ZIP/yield, tiny conversion fixture and mock host. No browser rendering, real PSD/PSB, or live Figma validation. A synchronous parser cannot be preempted on the same JS thread; tests cover invalidation before parse starts and ignored async callbacks/results after control returns.",
+  "tests": [
+    "Source × is a named native button beside Replace",
+    "Clicking × clears loaded source, statistics, mappings, queries, and file input",
+    "Source clear retains chosen options and the loaded host font catalog",
+    "Repeated source clears are harmless and send no host commands",
+    "Clearing before the first paint invalidates a parse before it starts",
+    "Clearing an in-flight async parse immediately restores picking and ignores late progress",
+    "Late parse rejection after clear cannot resurrect error, log, or file state",
+    "A newer file parses while old read is pending; stale success and progress cannot replace it",
+    "Late old rejection cannot overwrite a newer ready source",
+    "Old success finally cannot unlock or overwrite a newer active parse",
+    "Old error finally cannot unlock or overwrite a newer active parse",
+    "Inspection cancellation callbacks invalidate only the cleared generation",
+    "The actual file change handler supports clearing and reuploading the exact same File",
+    "Clear after a real current parse error removes its warning/log and allows retry",
+    "Active import disables × and direct/synthetic clear is guarded without sending cancel",
+    "Clear after successful import removes report/session only locally and preserves created Figma frame",
+    "After explicit import cancellation settles, clear restores source-free state without another cancellation",
+    "Late host cancellation rejection after clear cannot re-open the log",
+    "Real inspectFile rejects an already-cleared generation before I/O",
+    "Real inspectFile checks cancellation after its first yield before reading bytes",
+    "Real inspectFile stops after pending arrayBuffer resolves and before ZIP decompression",
+    "Real inspectFile checks cancellation at ZIP and parser yield boundaries",
+    "Real inspectFile preserves normal ZIP inspection when cancellation is omitted"
+  ],
+  "failures": []
+}

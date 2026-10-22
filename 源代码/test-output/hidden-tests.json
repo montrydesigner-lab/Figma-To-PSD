@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "scope": "Small PSD/PSB and normalization fixtures only; no live Figma or large-file validation",
+  "tests": [
+    {
+      "format": "psd",
+      "bytes": 20466,
+      "passed": true,
+      "checks": [
+        "default and explicit exclusion",
+        "hidden-group descendants",
+        "visible hierarchy and complete progress",
+        "no hidden image/mask assets",
+        "include-hidden opt-in",
+        "unchanged saved composite",
+        "hidden-only fonts excluded from visible summary",
+        "all-hidden document"
+      ]
+    },
+    {
+      "format": "psb",
+      "bytes": 20946,
+      "passed": true,
+      "checks": [
+        "default and explicit exclusion",
+        "hidden-group descendants",
+        "visible hierarchy and complete progress",
+        "no hidden image/mask assets",
+        "include-hidden opt-in",
+        "unchanged saved composite",
+        "hidden-only fonts excluded from visible summary",
+        "all-hidden document"
+      ]
+    }
+  ]
+}

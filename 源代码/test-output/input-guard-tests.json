@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "scope": "Small fixtures and metadata-only boundary checks; never reads/allocates a 1.5GB file",
+  "tests": [
+    "Above 1,500,000,000-byte input rejected before reading; cap unchanged",
+    "Exactly-at-cap metadata passes guard using tiny fixture bytes (no large allocation)",
+    "Tiny ZIP with oversized declared entry rejected by filter before decompression/allocation",
+    "Already-cleared source does not begin reading",
+    "Clear during first progress/yield prevents byte read",
+    "Late read after clear rejected before header parsing",
+    "Clear at PSD parsing yield prevents synchronous stage",
+    "Clear at ZIP decompression yield prevents synchronous stage"
+  ]
+}

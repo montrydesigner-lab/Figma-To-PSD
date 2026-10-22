@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "scope": "Selected real plugin main bundle executed in isolated Node VM contexts against a mocked Figma API. The complete suite includes cancellation during importer font discovery. No native Figma runtime, browser transport, successful document creation, or rendering was verified.",
+  "stoppedAfterFirstFailure": false,
+  "executionNote": "All 10 test groups completed.",
+  "mockLimits": [
+    "showUI synchronously dispatches test messages to model an adversarial startup ordering; this does not establish the real Figma scheduler.",
+    "Relaunch failure is deliberately injected; no claim is made that Figma throws for an unknown relaunch command.",
+    "createImage records bytes only and does not decode images or upload to Figma.",
+    "No UI event.source, request timeout, cancellation UI, or cloud bootstrap behavior is tested here."
+  ],
+  "bundle": {
+    "path": "dist/code.js",
+    "bytes": 43658,
+    "sha256": "dbaf9fc19b7b61a02775d77963fdf8a264690473886fa1cffb8d9a5638f0fe36"
+  },
+  "tests": [
+    {
+      "name": "Handler is registered before showUI; synchronous startup ping and begin receive immediate replies",
+      "passed": true
+    },
+    {
+      "name": "Optional relaunch exception is contained; fonts, ping, and begin still answer",
+      "passed": true
+    },
+    {
+      "name": "Begin validates session, name, and dimensions without replacing a valid session on failure",
+      "passed": true
+    },
+    {
+      "name": "Array and Uint8Array assets work; duplicate, empty, and stale assets never call createImage",
+      "passed": true
+    },
+    {
+      "name": "Cancel is session-scoped and repeatable; stale assets are rejected and a new begin can retry",
+      "passed": true
+    },
+    {
+      "name": "A replacement begin invalidates a previous idle session and retains only the replacement session",
+      "passed": true
+    },
+    {
+      "name": "An unresolved fonts promise does not block ping, begin, assets, or cancel",
+      "passed": true
+    },
+    {
+      "name": "Cancel releases an import blocked on fonts that never settle; no nodes are created and begin can retry",
+      "passed": true
+    },
+    {
+      "name": "Font resolution or rejection after cancellation neither creates nodes nor changes the replacement session",
+      "passed": true
+    },
+    {
+      "name": "Font rejection and unknown operations return errors; malformed requests are ignored without throwing",
+      "passed": true
+    }
+  ]
+}
