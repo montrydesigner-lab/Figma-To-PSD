@@ -40,7 +40,14 @@ const plain = value => JSON.parse(JSON.stringify(value));
 
 function boot({ throwRelaunch = false, listFonts, onShow } = {}) {
   const replies = [], images = [], warnings = [], lifecycle = [], nodeCreationCalls = [];
+  const tickets = new Map();
+  const withTicket = message => {
+    if (!['begin', 'cancel'].includes(message.type)) return message;
+    if (!tickets.has(message.sessionId)) tickets.set(message.sessionId, tickets.size + 1);
+    return { clientId: 'transport-client', sessionSequence: tickets.get(message.sessionId), ...message };
+  };
   const figma = {
+    currentPage: { id: 'transport-page', type: 'PAGE', children: [] },
     ui: { postMessage(message) { replies.push(message); } },
     root: {
       setRelaunchData() {
@@ -54,7 +61,7 @@ function boot({ throwRelaunch = false, listFonts, onShow } = {}) {
       assert.equal(typeof figma.ui.onmessage, 'function', 'Handler must exist when showUI is called');
       assert.equal(options.width, 440);
       assert.equal(options.height, 680);
-      onShow?.(figma, replies);
+      onShow?.(figma, replies, withTicket);
     },
     listAvailableFontsAsync: listFonts || (async () => available),
     createImage(bytes) {
@@ -79,7 +86,7 @@ function boot({ throwRelaunch = false, listFonts, onShow } = {}) {
     let deadline;
     try {
       await Promise.race([
-        figma.ui.onmessage({ ...message, requestId }),
+        figma.ui.onmessage({ ...withTicket(message), requestId }),
         new Promise((_, reject) => {
           deadline = setTimeout(() => reject(new Error(`No handler completion for ${message.type}`)), 1000);
         }),
@@ -105,9 +112,9 @@ async function test(name, action) {
 let failure;
 try {
   await test('Handler is registered before showUI; synchronous startup ping and begin receive immediate replies', async () => {
-    const instance = boot({ onShow(figma, replies) {
+    const instance = boot({ onShow(figma, replies, withTicket) {
       void figma.ui.onmessage({ type: 'ping', requestId: 'startup-ping' });
-      void figma.ui.onmessage({ ...validBegin('startup-session'), requestId: 'startup-begin' });
+      void figma.ui.onmessage({ ...withTicket(validBegin('startup-session')), requestId: 'startup-begin' });
       assert.equal(replies.find(value => value.requestId === 'startup-ping')?.ok, true);
       assert.equal(replies.find(value => value.requestId === 'startup-begin')?.ok, true);
     } });
@@ -124,7 +131,7 @@ try {
     assert.deepEqual(plain(fonts.result), { fonts: available.map(value => value.fontName) });
     const ping = await instance.send({ type: 'ping' });
     assert.equal(ping.ok, true);
-    assert.equal(ping.result.protocol, 2);
+    assert.equal(ping.result.protocol, 3);
     assert.equal(typeof ping.result.version, 'string');
     assert.equal((await instance.send(validBegin())).ok, true);
     assert.equal((await instance.send(validAsset())).ok, true);
@@ -148,8 +155,10 @@ try {
       assert.ok(ack.error.length > 0);
     }
     assert.equal((await instance.send(validAsset())).ok, true, 'Invalid begin must preserve old valid session');
+    assert.equal((await instance.send({ type: 'cancel', sessionId: 'session-one' })).result.terminal, true);
     for (const dimension of [1, 300000]) {
       assert.equal((await instance.send({ ...validBegin(`boundary-${dimension}`), width: dimension, height: dimension })).ok, true);
+      assert.equal((await instance.send({ type: 'cancel', sessionId: `boundary-${dimension}` })).result.terminal, true);
     }
   });
 
@@ -182,13 +191,15 @@ try {
     assert.equal(instance.images.length, 2);
   });
 
-  await test('A replacement begin invalidates a previous idle session and retains only the replacement session', async () => {
+  await test('A second begin cannot replace an idle session; explicit terminal cancellation permits the next session', async () => {
     const instance = boot();
     assert.equal((await instance.send(validBegin('old'))).ok, true);
+    assert.equal((await instance.send(validBegin('new'))).ok, false);
+    assert.equal((await instance.send(validAsset('old'))).ok, true);
+    assert.equal((await instance.send(validAsset('new'))).ok, false);
+    assert.equal((await instance.send({ type: 'cancel', sessionId: 'old' })).result.terminal, true);
     assert.equal((await instance.send(validBegin('new'))).ok, true);
-    assert.equal((await instance.send(validAsset('old'))).ok, false);
-    assert.equal((await instance.send(validAsset('new'))).ok, true);
-    assert.equal((await instance.send({ type: 'cancel', sessionId: 'old' })).ok, true);
+    assert.equal((await instance.send(validAsset('old', 'late-old'))).ok, false);
     assert.equal((await instance.send(validAsset('new', 'still-new'))).ok, true);
   });
 

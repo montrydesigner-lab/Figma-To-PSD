@@ -1,6 +1,6 @@
 /* Standalone ES5 diagnostics: runs before the application bundle and needs no PSD parser. */
 (function () {
-  var VERSION = '0.1.4';
+  var VERSION = '0.1.6';
   var boot = /*PSD_BRIDGE_BOOT*/null;
   var state = { uiVersion: VERSION, uiScript: 'not-started', hostBootstrap: boot,
     connection: 'checking', fontState: 'not-requested', events: [], lastProbe: null };
@@ -55,7 +55,7 @@
   var download = document.getElementById('diagnostics-download');
   if (download) download.addEventListener('click', function () {
     var url = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], {type:'application/json;charset=utf-8'}));
-    var a = document.createElement('a'); a.href=url; a.download='PSD-Bridge-0.1.4-连接诊断.json'; document.body.appendChild(a); a.click(); a.remove();
+    var a = document.createElement('a'); a.href=url; a.download='PSD-Bridge-0.1.6-连接诊断.json'; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   });
   record('diagnostics-started', {hostBootstrapPresent:!!boot}); render(); probe();

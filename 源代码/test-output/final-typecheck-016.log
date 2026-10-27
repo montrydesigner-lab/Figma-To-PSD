@@ -1,0 +1,4 @@
+
+> psd-to-figma@0.1.6 typecheck
+> tsc -p tsconfig.json
+

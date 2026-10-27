@@ -1,0 +1,535 @@
+{
+  "version": "0.1.6",
+  "baseCommit": "2b9cfce2bb6961d5b2b23c2f190ed3124ba32587",
+  "zipSha256": "bb8cf8257503a5c795deb028e6c3dd27a8f3c6f29901a84b04de20b1b7b8c4af",
+  "originalLibraryZipSha256": "3aa243b112462a402f1b3ed32cc70080428abef638a125a3c4a347c995a6b39b",
+  "documentationOnlyChanges": [
+    "HANDOFF-0.1.6.md",
+    "PACKAGE_MANIFEST.json"
+  ],
+  "scope": "Public documentation redaction only; tested product bytes unchanged; excludes this inventory itself",
+  "files": [
+    {
+      "path": "源代码/CHANGELOG.md",
+      "bytes": 1829,
+      "sha256": "93fc541da2922aaebf1afb0160bd7c57bbb656146b170e8277dc380da6fb8b19",
+      "gitBlobSha": "0c25747b3e9592369b239db15abe126921962fe7"
+    },
+    {
+      "path": "源代码/HANDOFF-0.1.6.md",
+      "bytes": 6167,
+      "sha256": "3050df5b3178f750790b8b7c74e748e0c8ba9eb2a56b23a875197595f873a5d6",
+      "gitBlobSha": "5d507dd3eb382ccddfc8751d52a0baa636a8d8cb"
+    },
+    {
+      "path": "源代码/README.md",
+      "bytes": 7099,
+      "sha256": "aa9ef77f5ac8627d005c5c8c188a52e1447ebfe3f5eb293e26672b54b2fd259b",
+      "gitBlobSha": "0bb43ac22be3be93de98e8b06f21bfe53d0a136e"
+    },
+    {
+      "path": "源代码/TEST_REPORT.md",
+      "bytes": 5495,
+      "sha256": "9c2b5527755f2232134f7fd31cedbc848eaf02f9029ba913d576ea07ccf632e1",
+      "gitBlobSha": "977c390cf849ab8b80f54586986987dec570341d"
+    },
+    {
+      "path": "源代码/THIRD_PARTY_LICENSES.txt",
+      "bytes": 4842,
+      "sha256": "b1520fc2ac886c1851797d1b82932b71c6b8293cd39fb119c3998654ebc0e57e",
+      "gitBlobSha": "c31faf763a40eac0efd5fc0bfc23cc5384846900"
+    },
+    {
+      "path": "源代码/dist/code.js",
+      "bytes": 49100,
+      "sha256": "82122395f007bad9f5aaf179bf596041ab545413eda31c29c4d59640c2b405bb",
+      "gitBlobSha": "ec84d71fced52d5c9f5aee85b9659b98c0a7c76e"
+    },
+    {
+      "path": "源代码/dist/importer-test.js",
+      "bytes": 37392,
+      "sha256": "700915bfdeaf36cd5a2d931267089d040b9bc11528dda13feb3463cfebff4beb",
+      "gitBlobSha": "6ee8d698e087957a9c6e027b553cf71b12a6db80"
+    },
+    {
+      "path": "源代码/dist/pipeline.cjs",
+      "bytes": 74380,
+      "sha256": "38f54675c87c88683dd666c93006fa38ecfa0bb7803fb5db9f5acffbcc596e40",
+      "gitBlobSha": "897728195b18970f0fd36564f6e7da9429ef4f6b"
+    },
+    {
+      "path": "源代码/dist/ui.html",
+      "bytes": 383329,
+      "sha256": "3d1f5efb738f9751d394fe9203cf7b0e1130e171864380925ed43615ebed5f7b",
+      "gitBlobSha": "0842ee1233cc14efaf8dec9a22f981b4b74ba51b"
+    },
+    {
+      "path": "源代码/manifest.json",
+      "bytes": 391,
+      "sha256": "72fe223e1bd7690671a672a27ae17a0c6135d811d12399f334c53863535c3fac",
+      "gitBlobSha": "f479ff6217107e5c258b6e2debeebd9ee4087a6f"
+    },
+    {
+      "path": "源代码/package-lock.json",
+      "bytes": 38053,
+      "sha256": "423145ab91563f613250ca261299f10db1aa80ee821aae0a164fa6987061069d",
+      "gitBlobSha": "3bd6e19fed956d05b99ba4639f3fdaac6c3a0266"
+    },
+    {
+      "path": "源代码/package.json",
+      "bytes": 1197,
+      "sha256": "bbfa9c92d1c9acda0f40a8350bdfa0971f060291591b987c29caeb603f461f66",
+      "gitBlobSha": "471f07a1340cd3eaaa48ebedcd2de34e2a1361a0"
+    },
+    {
+      "path": "源代码/samples/hidden-fixture.psb",
+      "bytes": 20946,
+      "sha256": "7beb3a5e6f84ded5d1ca2613fbe229d979fe370f2572e7403e9831bf754af377",
+      "gitBlobSha": "f8bab2780ed873068025e6d253c88d4de5965407"
+    },
+    {
+      "path": "源代码/samples/hidden-fixture.psd",
+      "bytes": 20466,
+      "sha256": "7cfe2a31623e83ac6410e27b8f61eb462130cf1061c6e56f475d19cfe84d726d",
+      "gitBlobSha": "6d9a61a1bed6a9e3a527528ecada32641a5368f8"
+    },
+    {
+      "path": "源代码/samples/layered-fixture.psb",
+      "bytes": 47824,
+      "sha256": "d366ab81dc85f13fa5cea3f1e1aa1cd99c75ce677b09496399f803e2542b8df4",
+      "gitBlobSha": "c144190793be8e5f12ddb85887d45665f780ecaa"
+    },
+    {
+      "path": "源代码/samples/layered-fixture.psd",
+      "bytes": 46052,
+      "sha256": "2f4ea5ae98d0c2f3f908e3976258b6624cf635c1ff01fec6a78f4c269b272ac3",
+      "gitBlobSha": "e8ff0ca6e0a72718086b86fb8bd7229a8cd5467d"
+    },
+    {
+      "path": "源代码/scripts/build-cloud.mjs",
+      "bytes": 3865,
+      "sha256": "6f6955c5296c304f40437f16aae5b3afde1b2c90314fff3a8f4ceb79546c03d7",
+      "gitBlobSha": "dccd06b9337060c04bdb76d2d8a29e9cdde690d9"
+    },
+    {
+      "path": "源代码/scripts/build.mjs",
+      "bytes": 1123,
+      "sha256": "832ecbd2ab7c085453f8a1b7d58fb4d06774cfcee1291212450b4c82f3c01073",
+      "gitBlobSha": "006f1ef70fb86d382cab23e362c8f4e60c4e7040"
+    },
+    {
+      "path": "源代码/scripts/inspect-source.mjs",
+      "bytes": 7313,
+      "sha256": "495afd0e42b5c80dc9721f508e53cc1db468f86fdaa6747b26e171024e097cd9",
+      "gitBlobSha": "2ccc741b3b4a1268a5e0397d9b75c656ae9efddf"
+    },
+    {
+      "path": "源代码/scripts/package-release.mjs",
+      "bytes": 6173,
+      "sha256": "4a45574ecb312b795169725e7db3afa7dc6c1ea380cbffaaba372568a4fd40d9",
+      "gitBlobSha": "5d56d63b6aaec4ee67358367b175e4c43045c0aa"
+    },
+    {
+      "path": "源代码/scripts/test-bridge.mjs",
+      "bytes": 18119,
+      "sha256": "252e6e0200ba25b21a9bd763ff49553b6032a3842e2a976cbaaf1603af5e7844",
+      "gitBlobSha": "7b7dd08e4fff603a3eb4bb1a40759665f57b615b"
+    },
+    {
+      "path": "源代码/scripts/test-diagnostics.mjs",
+      "bytes": 4909,
+      "sha256": "693c3f40425a74abf6edb8278d65f7fd27d093d0c9ff5316c93a4d5b7b14286d",
+      "gitBlobSha": "1c7095149a93a0b865344c5810d7e87d523f04b0"
+    },
+    {
+      "path": "源代码/scripts/test-fixtures.mjs",
+      "bytes": 14936,
+      "sha256": "cf4ce2a97314b9c430f0a908c91000cdc1c57bf3a16f6befbd94c24627d9d596",
+      "gitBlobSha": "3c2831d7cd7aadea8bfc7b053728af79114a43b6"
+    },
+    {
+      "path": "源代码/scripts/test-font-search.mjs",
+      "bytes": 19926,
+      "sha256": "77e8b7dab45e84d72ac98074f4cec590dc0ab2131577152659e70a732d3ade45",
+      "gitBlobSha": "c7ec752616682605042cc65a35b81ccc8e92f75e"
+    },
+    {
+      "path": "源代码/scripts/test-hidden.mjs",
+      "bytes": 8355,
+      "sha256": "14be9f955ae86971ea780f4689755dfe82800e40199c2d2ff0282a8046d12e3d",
+      "gitBlobSha": "0a2070d9516918d16c08c16a47172a8a7e752759"
+    },
+    {
+      "path": "源代码/scripts/test-importer.mjs",
+      "bytes": 11815,
+      "sha256": "ac9a6fdf5f755ca33e1eae802a530eeb96fb55bac265193ebc62df64a0b66235",
+      "gitBlobSha": "31330ac2cea8241402b3a08de882abfbc79c0fa1"
+    },
+    {
+      "path": "源代码/scripts/test-input-guard.mjs",
+      "bytes": 3297,
+      "sha256": "28592dfe44a2c3dfeb37c69496bc62650764f1516860fd3f56b9bbe0e06edd9e",
+      "gitBlobSha": "7dd7aea789cd2b1b5777b438d97b05220b58b608"
+    },
+    {
+      "path": "源代码/scripts/test-no-reference.mjs",
+      "bytes": 16527,
+      "sha256": "a741e0184c74ef05b4ba535c7b2bb5999363c2c0647ccf035c2a1069327ec7f1",
+      "gitBlobSha": "8529d789389d93a096cdfecded37ed5e82c478ae"
+    },
+    {
+      "path": "源代码/scripts/test-queue-host.mjs",
+      "bytes": 13683,
+      "sha256": "8e4807a801df2d2e77392e1babfd0b0c981ff768bacc5b7c3c7706d478688400",
+      "gitBlobSha": "d1f8fba83c626de93c424fd07da8cf1838961410"
+    },
+    {
+      "path": "源代码/scripts/test-queue-ui.mjs",
+      "bytes": 30874,
+      "sha256": "72c418af838137391cddcaef7bed9054f979862209cb13910a632e665eaa9d14",
+      "gitBlobSha": "936ca953a13c5987158e26bbddbb9491cb011595"
+    },
+    {
+      "path": "源代码/scripts/test-raster-effects.mjs",
+      "bytes": 5227,
+      "sha256": "31b6f68cc54ea81faa9c36ec41bd2336dafb5095c05b8fc1aaa9adc09fc51d0e",
+      "gitBlobSha": "a56375766e7419d20abc1ffc077bb96b1ba716fb"
+    },
+    {
+      "path": "源代码/scripts/test-source-relay.mjs",
+      "bytes": 1858,
+      "sha256": "8c745e13dc51f2780e518fec664f1286ea1d176da8849aa179fe6c4e4c934126",
+      "gitBlobSha": "dcd23773c4d64d62d7cc94c0440369a8ba770eba"
+    },
+    {
+      "path": "源代码/scripts/test-source-reset.mjs",
+      "bytes": 34348,
+      "sha256": "6bf61c83cb456e4187919eb7683941c8772dab2efff079519a56ed692ab46fca",
+      "gitBlobSha": "5b329be83a864300956082a6e565f1c49bd881f0"
+    },
+    {
+      "path": "源代码/scripts/test-text-paths.mjs",
+      "bytes": 4258,
+      "sha256": "4f0cccbfec6a2b72d9f4cab21a83e6ea1877d1d2da5823d8466803cb825e382e",
+      "gitBlobSha": "bf8749ab3990d4d7d55456750b05c311fd2a9fc4"
+    },
+    {
+      "path": "源代码/scripts/test-ui-transport.mjs",
+      "bytes": 6951,
+      "sha256": "282edbd9d9e45d2b7d9af4c81e37c37c8dfc6746128c3350929fbc703353a475",
+      "gitBlobSha": "6e01415b56f0c9902f1af4f99d876c6d3e480f33"
+    },
+    {
+      "path": "源代码/scripts/test-ui.mjs",
+      "bytes": 14461,
+      "sha256": "530f0b44300ff980b114b4d0e7aec2be7eeac6be9ae5e62afa22b8d6b169770d",
+      "gitBlobSha": "5a921da0d855c5072490a671341c0a79268c05d8"
+    },
+    {
+      "path": "源代码/src/code.ts",
+      "bytes": 11581,
+      "sha256": "721dd91174e0f382e3ca8265ba4cbf89b09795ae4b70d737275e7d42b9a1cf0a",
+      "gitBlobSha": "a1489a8d9fb1775bde77f887fe09770abfc05d38"
+    },
+    {
+      "path": "源代码/src/diagnostics.js",
+      "bytes": 4664,
+      "sha256": "1ef892209c1fbed6a5a79854edd3fa381f022ed67feed2659a31e30c0e1cabcb",
+      "gitBlobSha": "780440883916d4cbec2b1e8c660ab20c22743522"
+    },
+    {
+      "path": "源代码/src/font-search.ts",
+      "bytes": 676,
+      "sha256": "ed1148e2a4df4a29ecdafc518d2707420445d096955c1abe582ade7fcb6b5dfe",
+      "gitBlobSha": "37174bb3961665b9241125733c30bb09c5e534e9"
+    },
+    {
+      "path": "源代码/src/importer.ts",
+      "bytes": 34198,
+      "sha256": "8452e0c70747fd02f816621370449c0c9cb9a1c185c1198d643b8b283f51f4cf",
+      "gitBlobSha": "ea1ee0797dbca7aa3b7d4e48a1b12eeccdf79290"
+    },
+    {
+      "path": "源代码/src/normalize.ts",
+      "bytes": 20161,
+      "sha256": "24c1c6da36132337f3de316c24b51ee1ce93827f4fe81720439832184dba61d1",
+      "gitBlobSha": "a4038a76f257e051cc3303de8ce84575af681768"
+    },
+    {
+      "path": "源代码/src/pipeline.ts",
+      "bytes": 5350,
+      "sha256": "2e17c627db930b0dace71b014d2b2c939003a1ffc19aefc6addd5e00712b24f6",
+      "gitBlobSha": "a6931b9e51d923fd9a34f1dfcd1b9eed179b7a16"
+    },
+    {
+      "path": "源代码/src/png.ts",
+      "bytes": 1923,
+      "sha256": "85e571a0bf2a79a93c141518e9bd6f5ddc57b995de6683b539a67ed79a7cff0f",
+      "gitBlobSha": "c26577eb2bff988786f9a66041b417a5c1990df8"
+    },
+    {
+      "path": "源代码/src/queue.ts",
+      "bytes": 1782,
+      "sha256": "720fab699273685495a323b0e87146cac6b06cd4321c5824fb6bbd2e02466bcb",
+      "gitBlobSha": "5ca885499c67773f5590d574536a9445fe79fd92"
+    },
+    {
+      "path": "源代码/src/raster-effects.ts",
+      "bytes": 6906,
+      "sha256": "11651dc20e5dde79b940febb89acda0be228fca50ae19b75d1b49a8d918a6bba",
+      "gitBlobSha": "5913bf4dd34086fb6273a171097b23d19277f902"
+    },
+    {
+      "path": "源代码/src/raster.ts",
+      "bytes": 5006,
+      "sha256": "31a654dc88c35e539f6ca3e8a425a901b7391d5297f983fc3b6cd6f751a244cb",
+      "gitBlobSha": "5f2b0b9d367363a59195192e42cd726c7503dbdb"
+    },
+    {
+      "path": "源代码/src/styles.ts",
+      "bytes": 11440,
+      "sha256": "3cd3444bb75e8345fcb700009bad9cc225ed1d1c2aac1c82eeeb081ff2f5d4ff",
+      "gitBlobSha": "15f1144fdb74398cb9fc79a18d77a015912df7c4"
+    },
+    {
+      "path": "源代码/src/text-paths.ts",
+      "bytes": 4533,
+      "sha256": "f948899b1bbbfe3bd57cd8a8a2a83b563fca6439a25faad59df4ca6c0de6290f",
+      "gitBlobSha": "66ae8c2e0360dc2c353eeecfd51458e1a8010256"
+    },
+    {
+      "path": "源代码/src/types.ts",
+      "bytes": 3118,
+      "sha256": "ea5a887a389cd5c9175ee2a0e5071c0dc6bfec8cd558b8532ed9b9c6d1483c1f",
+      "gitBlobSha": "3bc1e51822045f21f458142190d404c2547a531b"
+    },
+    {
+      "path": "源代码/src/ui.html",
+      "bytes": 16619,
+      "sha256": "2f2eb427172b4d2200a186d6a2fe03d57cec9326ac2ea98db627dd55bc91f7c7",
+      "gitBlobSha": "32659ea81766c0b100769e04821348f9eb47dafe"
+    },
+    {
+      "path": "源代码/src/ui.ts",
+      "bytes": 38188,
+      "sha256": "c0bd0fe7b8305f892628e1be92bd2068dd31c3fefa9670f5756f0d440e390e4e",
+      "gitBlobSha": "84a4f6f17895a34a5ffea67cf74fcc7ec55f149f"
+    },
+    {
+      "path": "源代码/test-output/bridge-tests.json",
+      "bytes": 2487,
+      "sha256": "31b27308edca089565b0e049d15a67e1f044aaced79a1817f756eed9fc0297e1",
+      "gitBlobSha": "c932fb427b9bc1ee9fc6c6ce4239e1c0432beadf"
+    },
+    {
+      "path": "源代码/test-output/core-preservation-016.json",
+      "bytes": 1728,
+      "sha256": "b383dedd340b41a02bd8d4f7b7a87aabc6a030bac2d291f35404338dfdbbd187",
+      "gitBlobSha": "708548be6d10488598492893dd92bb2f29dea647"
+    },
+    {
+      "path": "源代码/test-output/diagnostics-tests.json",
+      "bytes": 786,
+      "sha256": "cea36b65a988b9b9f773591823b2e880c105171af8e7e144552b640e91b94e84",
+      "gitBlobSha": "8a139612ea31b1d9524c483f33f6a3af08f155ac"
+    },
+    {
+      "path": "源代码/test-output/final-browser-016.log",
+      "bytes": 2010,
+      "sha256": "fd722ebcbcc4b4e2d453527cdecfea2aa1522f994a098bb3ab039a3dbd87ffac",
+      "gitBlobSha": "8d2c9578ab47b7749483363e992ec73658347ef4"
+    },
+    {
+      "path": "源代码/test-output/final-build-016.log",
+      "bytes": 98,
+      "sha256": "2c6e422c96267332234f75d3106dc08b86dc44bf50d4a4c15fc4c5f59cd25541",
+      "gitBlobSha": "ededc99637a58c0a3c2c1d9ecbde0458c5562829"
+    },
+    {
+      "path": "源代码/test-output/final-offline-016.log",
+      "bytes": 18182,
+      "sha256": "d75bc46d10e03affbc3a1903e5bae31852760d4a7c4fc499290746c46938abad",
+      "gitBlobSha": "c11614584bca09cccea1d7498b62d3e77cc5b18e"
+    },
+    {
+      "path": "源代码/test-output/final-queue-browser-016.log",
+      "bytes": 3319,
+      "sha256": "5b433da7ed2d65e344298a333910bc8a9541d1dc20b96739461f69918f632885",
+      "gitBlobSha": "864c028cf648d2b04c2686c29f5a759ba5b14896"
+    },
+    {
+      "path": "源代码/test-output/final-typecheck-016.log",
+      "bytes": 60,
+      "sha256": "7e6c1b03ce32844d6c76455cb4d8bec00172d3f743221ec56ce26e2c64727504",
+      "gitBlobSha": "8e0203676a4d640523dd8917a41a5564ea991993"
+    },
+    {
+      "path": "源代码/test-output/final-validation-016.json",
+      "bytes": 1749,
+      "sha256": "e4aa1cf90150affae05951740782b333ed508d67262a2308f5d06e182fd44809",
+      "gitBlobSha": "1f2d65dfa7677d252ef1203f6ef03183ac1f6010"
+    },
+    {
+      "path": "源代码/test-output/fixture-tests.json",
+      "bytes": 665,
+      "sha256": "c73df6ed1e37da7c9ee1bbc831dee7aef5a32f788d7da6962663a13a31f3253c",
+      "gitBlobSha": "71a3a636cdb0f93f6e628de4fec42234698bf838"
+    },
+    {
+      "path": "源代码/test-output/font-search-tests.json",
+      "bytes": 1807,
+      "sha256": "f2fb2afecd263ced679cf258eab108aa64f33cde40c7667a04dfecc178483181",
+      "gitBlobSha": "9613fba3cec43431d9fe0ec462d6d3405ff10d22"
+    },
+    {
+      "path": "源代码/test-output/hidden-tests.json",
+      "bytes": 1003,
+      "sha256": "79740763d4db2e3f3fc0eaf6b25af9bced3f5ec9fc434e8d86945d47c31d876c",
+      "gitBlobSha": "99a695a2ea23e8ec37b40c65062e83a1205f42b4"
+    },
+    {
+      "path": "源代码/test-output/importer-tests.json",
+      "bytes": 1001,
+      "sha256": "9c6fbfc4eda9f7685ca19cb584722bfa8b97b2b15dbb40fdc579e0d406a9d58e",
+      "gitBlobSha": "73dfa1d62b51a96f1b3ab881b9633632b22a9957"
+    },
+    {
+      "path": "源代码/test-output/input-guard-tests.json",
+      "bytes": 702,
+      "sha256": "ca986e7cd917fce945a889401bee4232f3ebdf50b267bd6fc43d8502f6eef8d0",
+      "gitBlobSha": "3a1d2b2801b427d3de996ace7def14dc571f0553"
+    },
+    {
+      "path": "源代码/test-output/no-reference-tests.json",
+      "bytes": 1711,
+      "sha256": "178fe2d893f5e0ba29b2d800201d2c6c21f403c5adc239fc4b13636cf97f820c",
+      "gitBlobSha": "29a454914339e0876cd8b5268f4eb86b445e45a4"
+    },
+    {
+      "path": "源代码/test-output/queue-host-tests.json",
+      "bytes": 1326,
+      "sha256": "6d32cfa0b8cf06789a19c04c13aea4ed10febfd9ef748552486da002c19576ca",
+      "gitBlobSha": "70ee3b556388b555bd1e9803a1e9190c50491b69"
+    },
+    {
+      "path": "源代码/test-output/queue-ui-tests.json",
+      "bytes": 1802,
+      "sha256": "ddca8406bf48ffae6e7376bf04ad2a6fb4db4627e1a33e3ba1f1b1b240027406",
+      "gitBlobSha": "b1d07d063437e646018ec78ead43d4912d47ccf1"
+    },
+    {
+      "path": "源代码/test-output/source-reset-tests.json",
+      "bytes": 2443,
+      "sha256": "72910a8469381573842655e62428451c43d51f7641597cc0d16f4aa28e14784e",
+      "gitBlobSha": "bdaee69880cd228fc655b204554e1daf95882549"
+    },
+    {
+      "path": "源代码/test-output/ui-tests.json",
+      "bytes": 1886,
+      "sha256": "40be030a6b60d2f2295cb86aefdd159789c9e309e64232e84d23d92f3eae1c75",
+      "gitBlobSha": "e755aa8278c45ff9fe4a8eb03674aa1d8ee75e16"
+    },
+    {
+      "path": "源代码/test-output/ui-transport-tests.json",
+      "bytes": 1191,
+      "sha256": "b17efaca364bd343b22e0712bb35c0252ead02eaf4f8f03ab10ef09349b828c2",
+      "gitBlobSha": "3911d866637420ae133cd792e2ed03abede43c3d"
+    },
+    {
+      "path": "源代码/tsconfig.json",
+      "bytes": 267,
+      "sha256": "e9c0706823cc69a908e411e52e68da12556f442b5ad30a02b1f54f85e6ac7d1a",
+      "gitBlobSha": "2bb20346458f8199f62f4b083eb3cf4a985ed4f2"
+    },
+    {
+      "path": "源代码/PACKAGE_MANIFEST.json",
+      "bytes": 11931,
+      "sha256": "46484944b01f9e3d7844c13e9cdd18dcad7c62afed45c9314735bd041da528f7",
+      "gitBlobSha": "d933eda450de26e775af358f2302c10cca73c369"
+    },
+    {
+      "path": "安装包/Montry-PSD-PSB-Bridge-0.1.6.zip",
+      "bytes": 373366,
+      "sha256": "bb8cf8257503a5c795deb028e6c3dd27a8f3c6f29901a84b04de20b1b7b8c4af",
+      "gitBlobSha": "196d858bd684105a5742046968cc0fc8b9019bdd"
+    },
+    {
+      "path": "安装包/Montry-PSD-PSB-Bridge-0.1.6/manifest.json",
+      "bytes": 391,
+      "sha256": "72fe223e1bd7690671a672a27ae17a0c6135d811d12399f334c53863535c3fac",
+      "gitBlobSha": "f479ff6217107e5c258b6e2debeebd9ee4087a6f"
+    },
+    {
+      "path": "安装包/Montry-PSD-PSB-Bridge-0.1.6/dist/code.js",
+      "bytes": 49100,
+      "sha256": "82122395f007bad9f5aaf179bf596041ab545413eda31c29c4d59640c2b405bb",
+      "gitBlobSha": "ec84d71fced52d5c9f5aee85b9659b98c0a7c76e"
+    },
+    {
+      "path": "安装包/Montry-PSD-PSB-Bridge-0.1.6/dist/ui.html",
+      "bytes": 383329,
+      "sha256": "3d1f5efb738f9751d394fe9203cf7b0e1130e171864380925ed43615ebed5f7b",
+      "gitBlobSha": "0842ee1233cc14efaf8dec9a22f981b4b74ba51b"
+    },
+    {
+      "path": "安装包/Montry-PSD-PSB-Bridge-0.1.6/THIRD_PARTY_LICENSES.txt",
+      "bytes": 4842,
+      "sha256": "b1520fc2ac886c1851797d1b82932b71c6b8293cd39fb119c3998654ebc0e57e",
+      "gitBlobSha": "c31faf763a40eac0efd5fc0bfc23cc5384846900"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3678,
+      "sha256": "0cc02cb0ff6db3c66f03401c2f6130da6e841437bd8647d5896d5a568bf5b689",
+      "gitBlobSha": "2121de45904f6778db29405ad1510aa39c9c2b8c"
+    },
+    {
+      "path": "安装包/README.md",
+      "bytes": 991,
+      "sha256": "10e4d89ef78739d742c22e1add8dfb94a3847fdd878b576c2e17d83e99369526",
+      "gitBlobSha": "e16e8a91250565cffe7b3d9ab7ddd7d58de0bfb7"
+    },
+    {
+      "path": "安装包/Montry-PSD-PSB-Bridge-0.1.6/README.md",
+      "bytes": 692,
+      "sha256": "953343fb37ef78dca422be6e466f831d4f524aa0b3cbdb11a58c639a58567ee7",
+      "gitBlobSha": "163bb7f82f828cbb31d5bde512a48986f8db99b9"
+    },
+    {
+      "path": "HANDOFF-0.1.6.md",
+      "bytes": 2387,
+      "sha256": "da16b5b4c19f35c49297c1285046fcd2715771863d4ece7f0ea6610900a5e3ef",
+      "gitBlobSha": "d1556ec31d4b27e57981e50a4930ff47f466521f"
+    },
+    {
+      "path": "安装包/SHA256SUMS-0.1.6.txt",
+      "bytes": 98,
+      "sha256": "5735d43dcaf2c5deda6414af7db0b2469f330d5634bceefe8c400a487d43cce2",
+      "gitBlobSha": "8f8ac62ebddbc0a6c8e8070fa229dc7f471c9498"
+    },
+    {
+      "path": "安装包/RELEASE_VALIDATION-0.1.6.json",
+      "bytes": 2517,
+      "sha256": "cca4c9f59e698498549ae4daf3cc3c44d91bfc91208fd95f795e50ae9ecab7a7",
+      "gitBlobSha": "cfe945c76210123f487638647d30773119d31ef5"
+    },
+    {
+      "path": "源代码/test-output/README.md",
+      "bytes": 397,
+      "sha256": "b23dc26556545a2765dfb76093ce3a9663d5496ad46f1db6f47b674059085709",
+      "gitBlobSha": "9583c9cd3034709f2d1ea12a3967268333607c8f"
+    }
+  ],
+  "preservedHistoryMoves": [
+    {
+      "from": "源代码/test-output/core-preservation.json",
+      "to": "源代码/test-output/history-0.1.4/core-preservation.json",
+      "sha": "c5c37361ccf5b6101f990bec1514e6366eea4d38"
+    },
+    {
+      "from": "源代码/test-output/final-tests-014.log",
+      "to": "源代码/test-output/history-0.1.4/final-tests-014.log",
+      "sha": "0a11d1c2eded3c8a9153f2aeae9710c33c964ff4"
+    }
+  ]
+}

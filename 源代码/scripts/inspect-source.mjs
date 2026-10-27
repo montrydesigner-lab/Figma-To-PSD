@@ -8,7 +8,8 @@ import { createCanvas, ImageData } from '@napi-rs/canvas';
 // Read metadata and compressed channel bytes first. Only the merged preview is
 // decoded below; hundreds of full-resolution layer bitmaps never coexist.
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const input = path.resolve(process.argv[2] || path.join(root, '../source/S3-Steam.psb'));
+if (!process.argv[2]) throw new Error('Usage: node scripts/inspect-source.mjs /absolute/path/to/authorized-source.psd [output-directory]');
+const input = path.resolve(process.argv[2]);
 const outDir = path.resolve(process.argv[3] || path.join(root, 'test-output'));
 fs.mkdirSync(outDir, { recursive: true });
 agPsd.initializeCanvas(createCanvas, (w, h) => new ImageData(w, h));

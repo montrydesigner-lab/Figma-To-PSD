@@ -22,8 +22,13 @@ assert.deepEqual(recoverTextPaths(fixture), { recovered: 1, asciiStrings: 1 }, '
 assert.equal(fixture.children[0].text.textPath.bezierCurve.controlPoints.length, 8);
 const unknownEncoding = { ...fixture, children: [{ text: { text: 'x', index: 0 } }], engineData: Buffer.from(asciiEngine.replace('101001', '\u00ff'), 'latin1').toString('base64') };
 assert.match(recoverTextPaths(unknownEncoding).error, /Unknown engine-data string encoding/, 'Unknown encodings must be reported rather than guessed');
-const source = '../source/S3-Steam.psb';
-if (fs.existsSync(source)) {
+// Private source fixtures are never discovered/read automatically. The optional
+// regression below is tailored to the historical four-path fixture and needs an
+// explicitly supplied local path plus the user's authorization to read it.
+const sourceIndex = process.argv.indexOf('--source');
+const source = sourceIndex >= 0 ? process.argv[sourceIndex + 1] : undefined;
+if (sourceIndex >= 0 && (!source || source.startsWith('--'))) throw new Error('Usage: node scripts/test-text-paths.mjs [--source /absolute/path/to/authorized-legacy-fixture.psb]');
+if (source) {
   const { readPsd } = require('ag-psd');
   const psd = readPsd(fs.readFileSync(source), { skipLayerImageData: true, skipCompositeImageData: true, skipLinkedFilesData: true, skipThumbnail: true, useImageData: true });
   const report = recoverTextPaths(psd);
@@ -37,4 +42,4 @@ if (fs.existsSync(source)) {
   assert.deepEqual(recoverTextPaths(psd), { recovered: 0, asciiStrings: 2 }, 'Recovery must be idempotent');
   fs.writeFileSync('test-output/source-text-paths.json', JSON.stringify(paths, null, 2));
 }
-console.log('Text path tests passed: affine coordinates, full editable text, invalid data, actual PSB ASCII recovery and idempotence.');
+console.log('Text path tests passed: synthetic affine coordinates, full editable text, invalid data, ASCII recovery and unknown-encoding handling.' + (source ? ' Explicitly supplied legacy PSB fixture recovery and idempotence also passed.' : ' No user source file was read.'));

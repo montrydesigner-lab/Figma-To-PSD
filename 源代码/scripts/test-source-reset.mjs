@@ -16,7 +16,7 @@ const compiled = await build({
   stdin: {
     contents: sourceText + `\nglobalThis.testSourceUI = {
       chooseFile, clearSource, startImport, setBusy,
-      state() { return { source, inputFile, report, sessionId, generation, isBusy, isParsing, isCancelled, fonts, fontsLoaded,
+      state() { return { source, inputFile, report, sessionId, generation, isBusy, isParsing, isCancelled, fonts, fontsLoaded, jobs, blocked, queueRunning,
         fontMap: { ...fontMap }, fontSearchQueries: Array.from(fontSearchQueries.entries()) }; }
     };`,
     loader: 'ts', resolveDir: path.join(root, 'src'),
@@ -121,7 +121,7 @@ function createDom() {
     }
     elements.set(id, node); body.append(node);
   }
-  for (const id of ['include-hidden', 'include-reference', 'keep-text-backup', 'rasterize-gradients']) {
+  for (const id of ['include-hidden', 'keep-text-backup', 'rasterize-gradients']) {
     const option = new Element('label'); option.className = 'option'; body.append(option); option.append(elements.get(id));
   }
   const el = id => descendants(body).find(node => node.id === id) ?? null;
@@ -129,7 +129,7 @@ function createDom() {
   return { document, el };
 }
 const availableFonts = [ { family: 'Arial', style: 'Regular' }, { family: 'Inter', style: 'Bold' } ];
-const optionIds = ['include-hidden', 'include-reference', 'keep-text-backup', 'rasterize-gradients'];
+const optionIds = ['include-hidden', 'keep-text-backup', 'rasterize-gradients'];
 const plain = value => JSON.parse(JSON.stringify(value));
 const flush = () => new Promise(resolve => setTimeout(resolve, 0));
 async function until(predicate, description) {
@@ -149,8 +149,10 @@ async function createHarness() {
   function ack(message, result) { windowHandlers.message({ source: null, data: { pluginMessage: { type: 'ack', requestId: message.requestId, ok: true, result } } }); }
   function defaultAck(message) {
     const result = message.type === 'fonts' ? { fonts: availableFonts.map(font => ({ ...font })) }
-      : message.type === 'import' ? { frameId: `fixture-frame-${frames.length + 1}` }
-        : { protocol: 2, version, handlerRegistered: true };
+      : message.type === 'import' ? { frameId: `fixture-frame-${frames.length + 1}`, terminal: true, status: 'success' }
+        : message.type === 'cancel' ? { terminal: true, status: 'cancelled' }
+          : message.type === 'begin' ? { targetPageId: 'fixture-page' }
+            : { protocol: 3, version, handlerRegistered: true };
     if (message.type === 'import') frames.push(result.frameId);
     ack(message, result);
   }
@@ -247,12 +249,12 @@ await test('Clicking × clears loaded source, statistics, mappings, queries, and
 });
 
 await test('Source clear retains chosen options and the loaded host font catalog', async h => {
-  optionIds.forEach((id, index) => { h.el(id).checked = [true, false, true, true][index]; });
+  optionIds.forEach((id, index) => { h.el(id).checked = [true, false, true][index]; });
   await h.load();
   const fontCatalog = h.api.state().fonts;
   const fontRequests = h.requests.filter(request => request.type === 'fonts').length;
   h.api.clearSource(); assertEmpty(h);
-  assert.deepEqual(optionIds.map(id => h.el(id).checked), [true, false, true, true]);
+  assert.deepEqual(optionIds.map(id => h.el(id).checked), [true, false, true]);
   assert.equal(h.api.state().fonts, fontCatalog, 'Existing host font array preserved');
   assert.equal(h.api.state().fontsLoaded, true);
   assert.equal(h.requests.filter(request => request.type === 'fonts').length, fontRequests, 'No redundant font fetch');
@@ -280,52 +282,58 @@ await test('Clearing before the first paint invalidates a parse before it starts
   assert.equal(h.reads.length, 0, 'Discarded selection does not start a delayed parser');
 });
 
-await test('Clearing an in-flight async parse immediately restores picking and ignores late progress', async h => {
+await test('Clearing an in-flight async parse waits for drain and ignores late progress', async h => {
   const { read, run } = await h.begin();
-  read.progress(1, 3, 'current progress');
+  read.progress('current progress');
   assert.equal(h.el('status-detail').textContent, 'current progress');
   assert.equal(h.el('clear-source-btn').disabled, false, '× remains usable while parsing');
-  h.el('clear-source-btn').click(); assertEmpty(h);
+  h.el('clear-source-btn').click();
+  assert.equal(h.api.state().isBusy, true, 'A pending read still occupies the single read slot');
+  assert.equal(h.el('file-input').disabled, true, 'Cannot start a second read while draining');
   const snapshot = viewSnapshot(h);
   read.progress(2, 3, 'obsolete progress');
   assert.deepEqual(viewSnapshot(h), snapshot);
   read.resolve(fixture()); await run;
-  assertEmpty(h); assert.deepEqual(viewSnapshot(h), snapshot, 'Late parse success cannot resurrect source');
+  assertEmpty(h);
 });
 
 await test('Late parse rejection after clear cannot resurrect error, log, or file state', async h => {
   const { read, run } = await h.begin();
-  h.api.clearSource(); const snapshot = viewSnapshot(h);
+  h.api.clearSource();
   read.reject(new Error('obsolete parse failure')); await run;
-  assertEmpty(h); assert.deepEqual(viewSnapshot(h), snapshot);
+  assertEmpty(h);
 });
 
-await test('A newer file parses while old read is pending; stale success and progress cannot replace it', async h => {
+await test('New selection waits for cleared read to drain; stale success and progress cannot replace it', async h => {
   const old = await h.begin(file('old.psb')); h.api.clearSource();
   const currentFile = file('new.psd');
+  await h.api.chooseFile(currentFile);
+  assert.equal(h.reads.length, 1, 'A second read cannot overlap the pending first read');
+  old.read.resolve(fixture('old.psb')); await old.run; assertEmpty(h);
   const current = await h.begin(currentFile);
-  assert.equal(h.reads.length, 2, 'New read starts before old read settles');
+  assert.equal(h.reads.length, 2, 'New read starts only after old read settles');
   current.read.resolve(fixture('new.psd', { layers: 11 })); await current.run;
   const snapshot = viewSnapshot(h);
-  old.read.progress(1, 1, 'old success progress'); old.read.resolve(fixture('old.psb')); await old.run;
+  old.read.progress(1, 1, 'old success progress');
   assert.equal(h.api.state().source.name, 'new.psd'); assert.equal(h.api.state().inputFile, currentFile);
   assert.deepEqual(viewSnapshot(h), snapshot);
 });
 
 await test('Late old rejection cannot overwrite a newer ready source', async h => {
   const old = await h.begin(file('old.psb')); h.api.clearSource();
+  old.read.reject(new Error('old file failed')); await old.run;
   await h.load(file('new.psd')); const snapshot = viewSnapshot(h);
   old.read.progress('late legacy progress'); old.read.reject(new Error('old file failed')); await old.run;
   assert.equal(h.api.state().source.name, 'new.psd'); assert.deepEqual(viewSnapshot(h), snapshot);
 });
 
-for (const outcome of ['success', 'error']) await test(`Old ${outcome} finally cannot unlock or overwrite a newer active parse`, async h => {
+for (const outcome of ['success', 'error']) await test(`Drained old ${outcome} callbacks cannot unlock or overwrite a newer active parse`, async h => {
   const old = await h.begin(file('old.psd')); h.api.clearSource();
+  if (outcome === 'success') old.read.resolve(fixture('old.psd')); else old.read.reject(new Error('old parse error'));
+  await old.run;
   const current = await h.begin(file('new.psd'));
   current.read.progress(1, 4, 'new parsing'); const snapshot = viewSnapshot(h);
   old.read.progress(1, 1, 'old parsing');
-  if (outcome === 'success') old.read.resolve(fixture('old.psd')); else old.read.reject(new Error('old parse error'));
-  await old.run;
   assert.equal(h.api.state().isBusy, true); assert.equal(h.api.state().isParsing, true);
   assert.equal(h.el('import-btn').disabled, true); assert.equal(h.el('file-input').disabled, true);
   assert.deepEqual(viewSnapshot(h), snapshot);
@@ -337,9 +345,9 @@ await test('Inspection cancellation callbacks invalidate only the cleared genera
   const old = await h.begin(file('old.psd'));
   assert.equal(typeof old.read.isCancelled, 'function'); assert.equal(old.read.isCancelled(), false);
   h.api.clearSource(); assert.equal(old.read.isCancelled(), true);
+  old.read.reject(new Error('cleared inspection cancelled')); await old.run;
   const current = await h.begin(file('new.psd'));
   assert.equal(old.read.isCancelled(), true); assert.equal(current.read.isCancelled(), false);
-  old.read.reject(new Error('cleared inspection cancelled')); await old.run;
   assert.equal(current.read.isCancelled(), false);
   h.api.clearSource(); assert.equal(current.read.isCancelled(), true);
   current.read.reject(new Error('second inspection cancelled')); await current.run; assertEmpty(h);
@@ -363,7 +371,7 @@ await test('The actual file change handler supports clearing and reuploading the
 await test('Clear after a real current parse error removes its warning/log and allows retry', async h => {
   const operation = await h.begin(); operation.read.reject(new Error('current fixture failure')); await operation.run;
   assert.match(h.el('status-detail').textContent, /current fixture failure/);
-  assert.equal(h.el('log').hidden, false); assert.ok(h.el('log').childElementCount);
+  assert.match(h.el('queue-list').textContent, /current fixture failure/, 'Parse failure remains visible in its queue row');
   h.el('clear-source-btn').click(); assertEmpty(h);
   assert.doesNotMatch(h.el('status-detail').textContent, /current fixture failure/);
   await h.load(); assert.equal(h.el('import-btn').disabled, false);
@@ -388,7 +396,8 @@ await test('Active import disables × and direct/synthetic clear is guarded with
 
 await test('Clear after successful import removes report/session only locally and preserves created Figma frame', async h => {
   await h.load(); await h.api.startImport();
-  assert.equal(h.el('status-title').textContent, '导入完成'); assert.ok(h.api.state().report); assert.ok(h.api.state().sessionId);
+  assert.match(h.el('status-title').textContent, /完成/); assert.ok(h.api.state().report);
+  assert.equal(h.api.state().source, undefined, 'Successful job releases parsed PSD');
   assert.equal(h.el('report-btn').hidden, false); assert.equal(h.frames.length, 1);
   const priorSession = h.api.state().sessionId, frames = [...h.frames], requestCount = h.requests.length;
   h.el('clear-source-btn').click(); assertEmpty(h);
@@ -403,21 +412,26 @@ await test('After explicit import cancellation settles, clear restores source-fr
   await h.load(); h.stall('import'); const run = h.api.startImport();
   await until(() => h.requests.some(message => message.type === 'import'), 'Import reaches cancellable stage');
   h.el('cancel-btn').click(); await run;
-  assert.equal(h.el('status-title').textContent, '已取消导入');
+  assert.equal(h.el('status-title').textContent, '队列处理完成');
+  assert.equal(h.api.state().jobs[0].status, 'cancelled');
   const cancellationCount = h.requests.filter(message => message.type === 'cancel').length;
   assert.equal(cancellationCount, 1);
   h.el('clear-source-btn').click(); assertEmpty(h);
   assert.equal(h.requests.filter(message => message.type === 'cancel').length, cancellationCount);
 });
 
-await test('Late host cancellation rejection after clear cannot re-open the log', async h => {
+await test('Unconfirmed host cancellation blocks clear and prevents a new run', async h => {
   await h.load(); h.stall('import'); const run = h.api.startImport();
   await until(() => h.requests.some(message => message.type === 'import'), 'Import reaches cancellable stage');
-  h.stall('cancel'); h.el('cancel-btn').click(); await run;
+  h.stall('cancel'); h.el('cancel-btn').click();
+  await until(() => h.requests.some(message => message.type === 'cancel'), 'Cancellation confirmation requested');
   const cancellation = h.requests.findLast(message => message.type === 'cancel'); assert.ok(cancellation);
-  h.api.clearSource(); const snapshot = viewSnapshot(h);
-  h.reject(cancellation, 'late host cancellation failure'); await flush();
-  assertEmpty(h); assert.deepEqual(viewSnapshot(h), snapshot);
+  h.api.clearSource(); assert.equal(h.api.state().isBusy, true, 'Clear cannot unlock an unsettled host');
+  h.reject(cancellation, 'late host cancellation failure'); await run;
+  assert.equal(h.api.state().blocked, true, 'Unknown cancellation outcome blocks further jobs');
+  const requests = h.requests.length;
+  h.api.clearSource(); await h.api.startImport();
+  assert.equal(h.requests.length, requests, 'Clear and restart cannot bypass unresolved rollback');
 });
 
 // Exercise the actual inspection orchestration too. Parser and ZIP functions

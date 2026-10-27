@@ -1,0 +1,5 @@
+
+> psd-to-figma@0.1.6 build
+> node scripts/build.mjs
+
+Built offline plugin and test bundles.

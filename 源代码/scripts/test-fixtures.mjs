@@ -163,7 +163,9 @@ fs.writeFileSync(path.join(root, 'test-output/fixture-tests.json'), JSON.stringi
 console.log(JSON.stringify(report, null, 2));
 
 if (process.argv.includes('--source')) {
-  const sourcePath = path.resolve(root, '../source/S3-Steam.psb');
+  const requestedPath = process.argv[process.argv.indexOf('--source') + 1];
+  if (!requestedPath || requestedPath.startsWith('--')) throw new Error('Usage: node scripts/test-fixtures.mjs [--source /absolute/path/to/authorized-legacy-fixture.psb]');
+  const sourcePath = path.resolve(requestedPath);
   const sourceBytes = fs.readFileSync(sourcePath);
   const source = await inspectFile(new File([sourceBytes], 'S3 Steam 甄选版-价格公式调整.psb'));
   assert.equal(source.summary.width, 1625);

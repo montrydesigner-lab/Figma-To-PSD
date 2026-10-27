@@ -1,0 +1,303 @@
+
+> psd-to-figma@0.1.6 test
+> node scripts/test-fixtures.mjs && node scripts/test-importer.mjs && node scripts/test-raster-effects.mjs && node scripts/test-text-paths.mjs && node scripts/test-bridge.mjs && node scripts/test-ui-transport.mjs && node scripts/test-hidden.mjs && node scripts/test-diagnostics.mjs && node scripts/test-font-search.mjs && node scripts/test-source-reset.mjs && node scripts/test-input-guard.mjs && node scripts/test-no-reference.mjs && node scripts/test-queue-host.mjs
+
+{
+  "tests": [
+    {
+      "name": "PNG lossless alpha and hidden RGB",
+      "passed": true
+    },
+    {
+      "format": "psd",
+      "fileBytes": 46052,
+      "passed": true,
+      "pipelineNodes": 7,
+      "assets": 7
+    },
+    {
+      "format": "psb",
+      "fileBytes": 47824,
+      "passed": true,
+      "pipelineNodes": 7,
+      "assets": 7
+    },
+    {
+      "name": "ZIP single PSD/PSB and invalid signature",
+      "passed": true
+    }
+  ],
+  "summary": "PSD/PSB pipeline preserves hierarchy, editable mixed text, enabled effects, hidden flags, clipping metadata, mask pixels, RGBA including alpha=0 RGB, and the correct full-resolution PSB composite."
+}
+{
+  "passed": 8,
+  "tests": [
+    "Exact canvas, font discovery/substitution, weighted CJK fallback, scaled typography, editable rich ranges, unrelated nodes preserved",
+    "Mid-import cancellation rolls back every new node without deleting unrelated content",
+    "API failure rollback includes unattached/intermediate nodes",
+    "Editable cubic path text preserves full overflow content, source geometry, reversed segment anchor, scaled typography and consumed-vector lifecycle",
+    "Point text aligns actual glyph ink to source pixels before effects and clipping without changing font size",
+    "Photoshop top-first overlay stacks reverse only at native text/range/shape/stroke assignment; source paint order remains unchanged",
+    "Missing assets, non-finite dimensions, duplicate IDs, invalid text ranges rejected before mutations",
+    "Artboards clip content and children retain source absolute-to-local coordinates"
+  ]
+}
+Raster mapping checks passed: alpha clipping, fill opacity, blend mode, midpoint, tile continuity, native transforms/paint order, mixed text runs, inherited parent-space group overlays.
+Text path tests passed: synthetic affine coordinates, full editable text, invalid data, ASCII recovery and unknown-encoding handling. No user source file was read.
+{
+  "passed": true,
+  "scope": "Selected real plugin main bundle executed in isolated Node VM contexts against a mocked Figma API. The complete suite includes cancellation during importer font discovery. No native Figma runtime, browser transport, successful document creation, or rendering was verified.",
+  "stoppedAfterFirstFailure": false,
+  "executionNote": "All 10 test groups completed.",
+  "mockLimits": [
+    "showUI synchronously dispatches test messages to model an adversarial startup ordering; this does not establish the real Figma scheduler.",
+    "Relaunch failure is deliberately injected; no claim is made that Figma throws for an unknown relaunch command.",
+    "createImage records bytes only and does not decode images or upload to Figma.",
+    "No UI event.source, request timeout, cancellation UI, or cloud bootstrap behavior is tested here."
+  ],
+  "bundle": {
+    "path": "dist\\code.js",
+    "bytes": 49100,
+    "sha256": "82122395f007bad9f5aaf179bf596041ab545413eda31c29c4d59640c2b405bb"
+  },
+  "tests": [
+    {
+      "name": "Handler is registered before showUI; synchronous startup ping and begin receive immediate replies",
+      "passed": true
+    },
+    {
+      "name": "Optional relaunch exception is contained; fonts, ping, and begin still answer",
+      "passed": true
+    },
+    {
+      "name": "Begin validates session, name, and dimensions without replacing a valid session on failure",
+      "passed": true
+    },
+    {
+      "name": "Array and Uint8Array assets work; duplicate, empty, and stale assets never call createImage",
+      "passed": true
+    },
+    {
+      "name": "Cancel is session-scoped and repeatable; stale assets are rejected and a new begin can retry",
+      "passed": true
+    },
+    {
+      "name": "A second begin cannot replace an idle session; explicit terminal cancellation permits the next session",
+      "passed": true
+    },
+    {
+      "name": "An unresolved fonts promise does not block ping, begin, assets, or cancel",
+      "passed": true
+    },
+    {
+      "name": "Cancel releases an import blocked on fonts that never settle; no nodes are created and begin can retry",
+      "passed": true
+    },
+    {
+      "name": "Font resolution or rejection after cancellation neither creates nodes nor changes the replacement session",
+      "passed": true
+    },
+    {
+      "name": "Font rejection and unknown operations return errors; malformed requests are ignored without throwing",
+      "passed": true
+    }
+  ]
+}
+{
+  "passed": true,
+  "runtime": "Node VM executing bundled real UI source; minimal DOM, synthetic tiny pipeline and host; no Figma or browser rendering validation",
+  "tests": [
+    "Tiny transport flow accepts correlated null-source ACKs and releases the completed source",
+    "Tiny transport flow accepts correlated parent-source ACKs and releases the completed source",
+    "Tiny transport flow accepts correlated self-source ACKs and releases the completed source",
+    "Tiny transport flow accepts correlated relay-source ACKs and releases the completed source",
+    "Cancel stalled ping, reject guessed/unknown/malformed ACKs, ignore late success, then safely restart",
+    "Cancel stalled begin, reject guessed/unknown/malformed ACKs, ignore late success, then safely restart",
+    "Cancel stalled asset, reject guessed/unknown/malformed ACKs, ignore late success, then safely restart",
+    "Cancel stalled import, reject guessed/unknown/malformed ACKs, ignore late success, then safely restart",
+    "Unresponsive ping stops before conversion (production timers accelerated to 300ms)",
+    "Unresponsive begin stops before conversion (production timers accelerated to 300ms)"
+  ]
+}
+{
+  "passed": true,
+  "scope": "Small PSD/PSB and normalization fixtures only; no live Figma or large-file validation",
+  "tests": [
+    {
+      "format": "psd",
+      "bytes": 20466,
+      "passed": true,
+      "checks": [
+        "default and explicit exclusion",
+        "hidden-group descendants",
+        "visible hierarchy and complete progress",
+        "no hidden image/mask assets",
+        "include-hidden opt-in",
+        "unchanged saved composite",
+        "hidden-only fonts excluded from visible summary",
+        "all-hidden document"
+      ]
+    },
+    {
+      "format": "psb",
+      "bytes": 20946,
+      "passed": true,
+      "checks": [
+        "default and explicit exclusion",
+        "hidden-group descendants",
+        "visible hierarchy and complete progress",
+        "no hidden image/mask assets",
+        "include-hidden opt-in",
+        "unchanged saved composite",
+        "hidden-only fonts excluded from visible summary",
+        "all-hidden document"
+      ]
+    }
+  ]
+}
+{
+  "passed": true,
+  "scope": "Node VM of standalone diagnostic script with synthetic host/timers; not a live Figma result",
+  "tests": [
+    "Independent correlated probe accepts and classifies parent/top/self/null/relay/undefined host delivery",
+    "Unknown/prototype request IDs ignored; missing main marked unresponsive after one bounded probe",
+    "Main bootstrap plus missing ACK distinguished; manual read-only probe retries once",
+    "Mismatched UI/main versions surfaced explicitly",
+    "Diagnostics stays functional when application bundle throws",
+    "Built UI includes independent diagnostic script before application and boot marker for main injection",
+    "Real main bundle injects marker after handler registration; startup works even without browser timers"
+  ]
+}
+{
+  "passed": true,
+  "runtime": "Node VM executing real bundled helper and UI; minimal DOM, stub conversion and Figma host; no browser layout, real keyboard, or real Figma validation",
+  "tests": [
+    "Empty query returns every font in original order",
+    "Whitespace-only query returns every font",
+    "Latin family search is case-insensitive, partial, and trimmed",
+    "Chinese family substring search",
+    "Latin style substring search",
+    "Chinese style substring search",
+    "Whitespace-separated family and style tokens search together",
+    "Copy-pasted displayed family and style label searches correctly",
+    "Full-width Latin input and ideographic spaces normalize consistently",
+    "No match returns an empty result",
+    "Empty available-font list is handled safely",
+    "Frozen font array and objects remain unchanged across repeated searches",
+    "Every font row has a named search input, named destination selector, clear button, and live result status",
+    "Per-row filtering preserves current mapping and other rows, while retaining the selected nonmatching font",
+    "No-match search keeps the chosen font and shows an explicit empty-result state",
+    "Clear restores all choices, preserves selection, and returns search focus",
+    "Escape clears a nonempty query with focus retained; empty-search Escape remains available to the host",
+    "Choosing a filtered result uses the correct original font, rather than the result-array index",
+    "Automatic fallback option stays automatic through search and clear",
+    "Source font mappings survive include-hidden toggles and row rebuilding",
+    "Search, selection, and clear controls lock while busy and restore afterward",
+    "Real UI import flow forwards selected mappings unchanged while a search query is active"
+  ]
+}
+PASS Source 脳 is a named native button beside Replace
+PASS Clicking 脳 clears loaded source, statistics, mappings, queries, and file input
+PASS Source clear retains chosen options and the loaded host font catalog
+PASS Repeated source clears are harmless and send no host commands
+PASS Clearing before the first paint invalidates a parse before it starts
+PASS Clearing an in-flight async parse waits for drain and ignores late progress
+PASS Late parse rejection after clear cannot resurrect error, log, or file state
+PASS New selection waits for cleared read to drain; stale success and progress cannot replace it
+PASS Late old rejection cannot overwrite a newer ready source
+PASS Drained old success callbacks cannot unlock or overwrite a newer active parse
+PASS Drained old error callbacks cannot unlock or overwrite a newer active parse
+PASS Inspection cancellation callbacks invalidate only the cleared generation
+PASS The actual file change handler supports clearing and reuploading the exact same File
+PASS Clear after a real current parse error removes its warning/log and allows retry
+PASS Active import disables 脳 and direct/synthetic clear is guarded without sending cancel
+PASS Clear after successful import removes report/session only locally and preserves created Figma frame
+PASS After explicit import cancellation settles, clear restores source-free state without another cancellation
+PASS Unconfirmed host cancellation blocks clear and prevents a new run
+PASS Real inspectFile rejects an already-cleared generation before I/O
+PASS Real inspectFile checks cancellation after its first yield before reading bytes
+PASS Real inspectFile stops after pending arrayBuffer resolves and before ZIP decompression
+PASS Real inspectFile checks cancellation at ZIP and parser yield boundaries
+PASS Real inspectFile preserves normal ZIP inspection when cancellation is omitted
+{
+  "passed": true,
+  "passedCount": 23,
+  "failedCount": 0,
+  "runtime": "Node VM executing bundled real UI plus real inspectFile orchestration; minimal DOM, deferred inspection fixture, stub parser/ZIP/yield, tiny conversion fixture and mock host. No browser rendering, real PSD/PSB, or live Figma validation. A synchronous parser cannot be preempted on the same JS thread; tests cover invalidation before parse starts and ignored async callbacks/results after control returns.",
+  "tests": [
+    "Source 脳 is a named native button beside Replace",
+    "Clicking 脳 clears loaded source, statistics, mappings, queries, and file input",
+    "Source clear retains chosen options and the loaded host font catalog",
+    "Repeated source clears are harmless and send no host commands",
+    "Clearing before the first paint invalidates a parse before it starts",
+    "Clearing an in-flight async parse waits for drain and ignores late progress",
+    "Late parse rejection after clear cannot resurrect error, log, or file state",
+    "New selection waits for cleared read to drain; stale success and progress cannot replace it",
+    "Late old rejection cannot overwrite a newer ready source",
+    "Drained old success callbacks cannot unlock or overwrite a newer active parse",
+    "Drained old error callbacks cannot unlock or overwrite a newer active parse",
+    "Inspection cancellation callbacks invalidate only the cleared generation",
+    "The actual file change handler supports clearing and reuploading the exact same File",
+    "Clear after a real current parse error removes its warning/log and allows retry",
+    "Active import disables 脳 and direct/synthetic clear is guarded without sending cancel",
+    "Clear after successful import removes report/session only locally and preserves created Figma frame",
+    "After explicit import cancellation settles, clear restores source-free state without another cancellation",
+    "Unconfirmed host cancellation blocks clear and prevents a new run",
+    "Real inspectFile rejects an already-cleared generation before I/O",
+    "Real inspectFile checks cancellation after its first yield before reading bytes",
+    "Real inspectFile stops after pending arrayBuffer resolves and before ZIP decompression",
+    "Real inspectFile checks cancellation at ZIP and parser yield boundaries",
+    "Real inspectFile preserves normal ZIP inspection when cancellation is omitted"
+  ],
+  "failures": []
+}
+{
+  "passed": true,
+  "scope": "Small fixtures and metadata-only boundary checks; never reads/allocates a 1.5GB file",
+  "tests": [
+    "Above 1,500,000,000-byte input rejected before reading; cap unchanged",
+    "Exactly-at-cap metadata passes guard using tiny fixture bytes (no large allocation)",
+    "Tiny ZIP with oversized declared entry rejected by filter before decompression/allocation",
+    "Already-cleared source does not begin reading",
+    "Clear during first progress/yield prevents byte read",
+    "Late read after clear rejected before header parsing",
+    "Clear at PSD parsing yield prevents synchronous stage",
+    "Clear at ZIP decompression yield prevents synchronous stage"
+  ]
+}
+{
+  "passed": 12,
+  "scope": "Offline PSD/PSB fixture conversion plus importer and compiled-host public API mocks; no live Figma or rendering-equivalence claim",
+  "tests": [
+    "Editable-only output preserves source artboards, images, native text and text backup with includeReference omitted",
+    "Editable-only output preserves source artboards, images, native text and text backup with includeReference false",
+    "Editable-only output preserves source artboards, images, native text and text backup with includeReference true",
+    "Repeated same-name and same-layer-ID import preserves all prior editable content and user images",
+    "Cancellation after repeated import removes only current-attempt nodes, preserving both prior imports and the user comparison-named board",
+    "Compiled host import creates only the editable root with options omitted",
+    "Compiled host import creates only the editable root with legacy includeReference:true",
+    "UI no longer exposes the reference checkbox and explicitly disables composite conversion",
+    "PSD real-file conversion, hidden layers skipped: complete layer structure and 4 layer/mask PNG assets are byte-identical; only composite assets are omitted",
+    "PSD real-file conversion, hidden layers included: complete layer structure and 6 layer/mask PNG assets are byte-identical; only composite assets are omitted",
+    "PSB real-file conversion, hidden layers skipped: complete layer structure and 4 layer/mask PNG assets are byte-identical; only composite assets are omitted",
+    "PSB real-file conversion, hidden layers included: complete layer structure and 6 layer/mask PNG assets are byte-identical; only composite assets are omitted"
+  ]
+}
+PSD Bridge: committed result could not reach UI: Error: injected delivery failure
+{
+  "passed": 11,
+  "scope": "Synthetic documents, real host/importer code and mocked public Figma API; no live Figma or pixel rendering test.",
+  "tests": [
+    "Idle and writing sessions cannot be overwritten; terminal cancellation releases assets and allows restart",
+    "Cancel ACK waits for font-stage importer termination; late font resolution cannot mutate a new session",
+    "Cancellation during node creation rolls back only current file before terminal ACK",
+    "Rollback failure is nonterminal and blocks cancel, restart and new batches",
+    "Batch destination survives page switches; duplicate filenames get distinct names and nonoverlapping roots",
+    "Success receipt survives late cancellation without deleting committed content or reporting it cancelled",
+    "Unseen cancellation fences delayed begin; invalid batch/session requests cannot mutate an active job",
+    "Deleted destination fails before node creation; file-level failure terminal allows safe next attempt",
+    "Terminal receipt cache stays bounded and contains only compact metadata after many sequential sessions",
+    "Client identity and monotonic session ticket validation isolate stale or malformed UI instances",
+    "Lost success delivery never changes committed receipt into failure; cancellation can recover compact success"
+  ]
+}

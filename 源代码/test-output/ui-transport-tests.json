@@ -1,17 +1,16 @@
 {
   "passed": true,
-  "runtime": "Node VM executing bundled real UI source; minimal DOM, stub pipeline and host; no Figma or browser rendering validation",
+  "runtime": "Node VM executing bundled real UI source; minimal DOM, synthetic tiny pipeline and host; no Figma or browser rendering validation",
   "tests": [
-    "Startup ping and fonts accept null-source correlated ACKs",
-    "Tiny transport flow succeeds with null ACK source",
-    "Tiny transport flow succeeds with parent ACK source",
-    "Tiny transport flow succeeds with self ACK source",
-    "Tiny transport flow succeeds with relay ACK source",
-    "Cancel stalled ping immediately, reject guessed/unknown ACKs, ignore late success",
-    "Cancel stalled begin immediately, reject guessed/unknown ACKs, ignore late success",
-    "Cancel stalled asset immediately, reject guessed/unknown ACKs, ignore late success",
-    "Cancel stalled import immediately, reject guessed/unknown ACKs, ignore late success",
-    "Unresponsive handshake fails before conversion (production 8s timer accelerated to 150ms)",
-    "Unresponsive begin fails before assets/import"
+    "Tiny transport flow accepts correlated null-source ACKs and releases the completed source",
+    "Tiny transport flow accepts correlated parent-source ACKs and releases the completed source",
+    "Tiny transport flow accepts correlated self-source ACKs and releases the completed source",
+    "Tiny transport flow accepts correlated relay-source ACKs and releases the completed source",
+    "Cancel stalled ping, reject guessed/unknown/malformed ACKs, ignore late success, then safely restart",
+    "Cancel stalled begin, reject guessed/unknown/malformed ACKs, ignore late success, then safely restart",
+    "Cancel stalled asset, reject guessed/unknown/malformed ACKs, ignore late success, then safely restart",
+    "Cancel stalled import, reject guessed/unknown/malformed ACKs, ignore late success, then safely restart",
+    "Unresponsive ping stops before conversion (production timers accelerated to 300ms)",
+    "Unresponsive begin stops before conversion (production timers accelerated to 300ms)"
   ]
 }

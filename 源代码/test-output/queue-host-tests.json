@@ -1,0 +1,17 @@
+{
+  "passed": 11,
+  "scope": "Synthetic documents, real host/importer code and mocked public Figma API; no live Figma or pixel rendering test.",
+  "tests": [
+    "Idle and writing sessions cannot be overwritten; terminal cancellation releases assets and allows restart",
+    "Cancel ACK waits for font-stage importer termination; late font resolution cannot mutate a new session",
+    "Cancellation during node creation rolls back only current file before terminal ACK",
+    "Rollback failure is nonterminal and blocks cancel, restart and new batches",
+    "Batch destination survives page switches; duplicate filenames get distinct names and nonoverlapping roots",
+    "Success receipt survives late cancellation without deleting committed content or reporting it cancelled",
+    "Unseen cancellation fences delayed begin; invalid batch/session requests cannot mutate an active job",
+    "Deleted destination fails before node creation; file-level failure terminal allows safe next attempt",
+    "Terminal receipt cache stays bounded and contains only compact metadata after many sequential sessions",
+    "Client identity and monotonic session ticket validation isolate stale or malformed UI instances",
+    "Lost success delivery never changes committed receipt into failure; cancellation can recover compact success"
+  ]
+}

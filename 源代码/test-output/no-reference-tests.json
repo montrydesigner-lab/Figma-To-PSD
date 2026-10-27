@@ -1,0 +1,18 @@
+{
+  "passed": 12,
+  "scope": "Offline PSD/PSB fixture conversion plus importer and compiled-host public API mocks; no live Figma or rendering-equivalence claim",
+  "tests": [
+    "Editable-only output preserves source artboards, images, native text and text backup with includeReference omitted",
+    "Editable-only output preserves source artboards, images, native text and text backup with includeReference false",
+    "Editable-only output preserves source artboards, images, native text and text backup with includeReference true",
+    "Repeated same-name and same-layer-ID import preserves all prior editable content and user images",
+    "Cancellation after repeated import removes only current-attempt nodes, preserving both prior imports and the user comparison-named board",
+    "Compiled host import creates only the editable root with options omitted",
+    "Compiled host import creates only the editable root with legacy includeReference:true",
+    "UI no longer exposes the reference checkbox and explicitly disables composite conversion",
+    "PSD real-file conversion, hidden layers skipped: complete layer structure and 4 layer/mask PNG assets are byte-identical; only composite assets are omitted",
+    "PSD real-file conversion, hidden layers included: complete layer structure and 6 layer/mask PNG assets are byte-identical; only composite assets are omitted",
+    "PSB real-file conversion, hidden layers skipped: complete layer structure and 4 layer/mask PNG assets are byte-identical; only composite assets are omitted",
+    "PSB real-file conversion, hidden layers included: complete layer structure and 6 layer/mask PNG assets are byte-identical; only composite assets are omitted"
+  ]
+}

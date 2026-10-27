@@ -1,38 +1,59 @@
-# 0.1.4 素材清除与读取保护验证
+# 0.1.6 串行多文件导入验证记录
 
-日期：2026-09-30。
+日期：2026-10-27。基线为本机已交付的 0.1.5；开发目录为新的 task-2/Montry-PSD-PSB-Bridge-0.1.6。以下结果来自最终产品源码构建后的本次执行，不是沿用 0.1.5 记录。
 
-## 变化
+## 最终命令结果
 
-- 按实际 0.1.3 截图，在「更换」右侧加入 ×，恢复拖入区
-- 清除 source、inputFile、report、sessionId、文件输入值、统计、警告、进度、日志、字体映射与搜索；保留可用字体缓存、连接诊断和还原选项
-- 通过 generation 作废旧读取，旧进度／成功／失败／finally 不得恢复素材或改变新读取忙碌状态
-- 读取管线在异步读取、ZIP 解压和 PSD 解析前增加取消检查；已开始的 File.arrayBuffer 及同步解析不宣称可即时抢占
-- 导入期间 × 禁用且有说明；清除本身不发送 cancel、不发送删除节点命令，不删除原文件或画布导入
-- 取消请求的迟到错误不会重新填充已清空素材的日志
-- 统一版本至 0.1.4；1.5 GB 及其他容量上限没有提高
+| 检查 | 结果 | 证据 |
+|---|---|---|
+| npm run typecheck | 通过 | final-typecheck-016.log |
+| npm run build | 通过，更新 dist | final-build-016.log |
+| npm test | 全部 13 个离线脚本通过 | final-offline-016.log |
+| npm run test:ui | 13 组通过 | ui-tests.json / final-browser-016.log |
+| npm run test:queue-ui | 15 组通过、0 失败 | queue-ui-tests.json / final-queue-browser-016.log |
+| 实际 UI 审查 | 本地 Chromium 440×680，运行／字体确认／完成状态 | 内部截图，不随交付包上传 |
+| 发布 ZIP | 逐文件散列、manifest 入口和 ZIP 解压字节校验 | PACKAGE_MANIFEST.json；包外 RELEASE_VALIDATION-0.1.6.json |
 
-## 检查
+npm test 保留原 12 个离线脚本，新增 test-queue-host.mjs。原图片效果、文字路径、隐藏层、无对比画板等覆盖没有移除。部分旧 UI 预期按新语义调整：成功后不保留源树；预读取清除需等旧读取结束；取消需等最终回执；已成功项不因重试重复导入。
 
-- npm run typecheck / npm run build
-- npm test，包括既有格式、导入器、通信、诊断、隐藏层及 22 组字体搜索回归
-- scripts/test-source-reset.mjs：真实 UI 源码在 Node VM／模拟 DOM 与延迟解析器中覆盖清除、同名重传、迟到读结果、忙碌导入和完成后清除。本脚本共 23 组（18 组 UI 和 5 组小型读取边界），逐项结果见 source-reset-tests.json
-- scripts/test-input-guard.mjs：8 组小样例检查，覆盖阈值以上拒绝、阈值本身允许、ZIP 声明尺寸拒绝，以及读取／解压／解析前取消检查。边界大小是测试元数据，没有分配 1.5 GB 文件
-- core-preservation.json 记录与 0.1.3 的源码对照
-- ZIP 完整性、manifest 入口及所有打包文件散列验证
+## 新增队列覆盖
 
-## 1.5 GB 的准确含义
+- 新宿主模拟 **11 组**：单会话互斥；字体等待时取消；创建中回滚；回滚失败锁定；批次页固定／同名不重叠；成功后取消不误报；迟到 begin 防护；目标页删除；128 条轻量回执上限与淘汰；面板身份／递增序号校验；成功回执发送失败后恢复。
+- 新浏览器队列模拟 **15 组**：单文件兼容／引用释放；多选只预读第一份／并发 1／重复点击；多文件拖放／同名；格式、空文件和超限元数据检查；损坏中间项失败后继续和只重试失败；字体搜索及跨文件映射；Auto 沿用原宿主算法且复用实际替代；取消等待回滚／迟到 ACK 和进度；不完整成功回执的终态核对；停止全部／重新开始；不确定回滚锁定；取消回执超时锁定；清空时读锁；pagehide 禁止后续；字体目录尚未返回时阻止过早启动。
+- 既有浏览器套件新增真实小型 PSD/PSB parser 三文件流程：相同文件名、损坏中间项、后续继续、独立会话、字体映射复用。这里的“真实”仅指实际 PSD/PSB 文件字节和真实解析器；Figma 仍为模拟宿主。
+- 不预读证明来自可控的未结束读取／转换／宿主请求及计数断言；引用释放证明来自 UI 状态和报告结构检查。不等同于真实浏览器堆内存曲线或即时 GC 测量。
 
-src/pipeline.ts 以 `> 1_500_000_000` 检查文件和 ZIP 解压成员，是应用保护阈值。整文件 ArrayBuffer 和保留的源字节仍是当前架构的一部分。src/raster.ts 先获取图层像素，再生成每块 RGBA；src/png.ts 另建扫描行、压缩块和最终 PNG 数组。因此分块不等于流式读取，磁盘大小也不能推导固定的内存倍数。
+## 继承覆盖
 
-另有单层 1 亿像素、单图像资产 64 MiB、一轮资产 2 GiB 的独立代码保护，均未在本轮调整。不能将其中任何数字称作所有 Figma 客户端的统一内存上限。
+| 结果文件 | 分组数 |
+|---|---:|
+| fixture-tests.json | 4 |
+| importer-tests.json | 8 |
+| bridge-tests.json | 10 |
+| ui-transport-tests.json | 10 |
+| hidden-tests.json | 2 |
+| diagnostics-tests.json | 7 |
+| font-search-tests.json | 22 |
+| source-reset-tests.json | 23 |
+| input-guard-tests.json | 8 |
+| no-reference-tests.json | 12 |
 
-## 限制
+此外执行 test-raster-effects.mjs 和 test-text-paths.mjs，其成功输出保存在最终离线日志。0.1.5 的无对比画板 12 组回归继续通过：旧 includeReference:true 仍不建对比画板；图片、蒙版、文字备份、源多画板、已有用户内容保留；4 种小型 PSD/PSB／隐藏层配置下非合成图资产字节一致。
 
-- 未读取用户截图中约 1 GB 的真实 PSD，没有做大文件压力测试
-- 新增清除功能使用模拟 DOM／宿主验证，未在真实 Figma 做新的视觉验收。截图确认的 0.1.3 连接正常与此前用户的真实导入成功仍是基线
-- Chromium 曾因环境 IPC 限制无法启动，本轮未重复尝试
-- × 解除当前素材的持有引用，但不能承诺浏览器立即回收内存；旧的不可中断读取可能需要先完成
-- 未更新在线账号插件，没有付费 API 或额外外部上传流程
+发布时核对 font-search、pipeline、normalize、png、raster、raster-effects、styles、text-paths、types 与 manifest 均和 0.1.5 字节相同，依赖图不变。importer 改动仅限目的页／画板名／提交边界、位置与回滚确认。原 0.1.5 ZIP、原 src 和 dist 另与原 ZIP 核对，保持不变。
 
-详细使用和内存原因见 README。
+## 执行环境与修复
+
+使用 Windows 本地 Node.js、锁定依赖及已安装 Microsoft Edge 的 headless Chromium；浏览器测试只在进程内设置路径，不改系统环境或安全设置。esbuild 在文件沙箱内读取父目录曾报 Access denied；经工具自动审批允许本地构建／测试后通过，没有改 ACL、禁用安全机制或绕过拒绝。
+
+测试期间修复了 FileList 在清空 input 时失效的问题、预读取清空的重叠读取风险、过早确认尚未返回字体目录、缺少终态的回执、旧回执淘汰后防重放以及成功回执发送失败的状态保留。最终日志里的 injected delivery failure 是刻意注入的通信失败断言，不是最终失败。
+
+脚本原有自动寻找用户设计文件的分支已移除。test-fixtures/test-text-paths 只有显式 --source PATH 才读外部设计；inspect-source 必须明确给路径。本次未提供这些参数、未读取用户设计文件。
+
+## 明确未验证
+
+- 未安装插件、未操作真实 Figma 文档；未验证真实 Figma 渲染、真实字体服务、逐像素保真或桌面插件关闭瞬间的宿主行为。
+- 未做 1.5 GB 实文件、大像素、多文件长队列压力测试；大小边界仅通过元数据和小 ZIP 声明测试，没有分配 1.5 GB。
+- 关闭／清空测试验证事件和状态处理，不能保证进程被强制关闭时完成回滚。应先停止全部并等待终态再关闭。
+- 释放引用不等于强制 GC，Figma 已导入图层和图像缓存持续累积。低于 1.5 GB 仍可能失败，未承诺无限文件数。
+- 截图仅内部 QA；未把浏览器截图上传 Library 或加入 ZIP。Library 上传结果在主任务最终交付记录中单独确认。

@@ -1,0 +1,58 @@
+{
+  "version": "0.1.6",
+  "baseline": "Local delivered 0.1.5",
+  "passed": true,
+  "unchangedFiles": [
+    {
+      "path": "src/font-search.ts",
+      "sha256": "ed1148e2a4df4a29ecdafc518d2707420445d096955c1abe582ade7fcb6b5dfe",
+      "identicalTo015": true
+    },
+    {
+      "path": "src/pipeline.ts",
+      "sha256": "2e17c627db930b0dace71b014d2b2c939003a1ffc19aefc6addd5e00712b24f6",
+      "identicalTo015": true
+    },
+    {
+      "path": "src/normalize.ts",
+      "sha256": "24c1c6da36132337f3de316c24b51ee1ce93827f4fe81720439832184dba61d1",
+      "identicalTo015": true
+    },
+    {
+      "path": "src/png.ts",
+      "sha256": "85e571a0bf2a79a93c141518e9bd6f5ddc57b995de6683b539a67ed79a7cff0f",
+      "identicalTo015": true
+    },
+    {
+      "path": "src/raster.ts",
+      "sha256": "31a654dc88c35e539f6ca3e8a425a901b7391d5297f983fc3b6cd6f751a244cb",
+      "identicalTo015": true
+    },
+    {
+      "path": "src/raster-effects.ts",
+      "sha256": "11651dc20e5dde79b940febb89acda0be228fca50ae19b75d1b49a8d918a6bba",
+      "identicalTo015": true
+    },
+    {
+      "path": "src/styles.ts",
+      "sha256": "3cd3444bb75e8345fcb700009bad9cc225ed1d1c2aac1c82eeeb081ff2f5d4ff",
+      "identicalTo015": true
+    },
+    {
+      "path": "src/text-paths.ts",
+      "sha256": "f948899b1bbbfe3bd57cd8a8a2a83b563fca6439a25faad59df4ca6c0de6290f",
+      "identicalTo015": true
+    },
+    {
+      "path": "src/types.ts",
+      "sha256": "ea5a887a389cd5c9175ee2a0e5071c0dc6bfec8cd558b8532ed9b9c6d1483c1f",
+      "identicalTo015": true
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "72fe223e1bd7690671a672a27ae17a0c6135d811d12399f334c53863535c3fac",
+      "identicalTo015": true
+    }
+  ],
+  "dependenciesUnchanged": true
+}

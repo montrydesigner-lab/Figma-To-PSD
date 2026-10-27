@@ -209,7 +209,7 @@ export async function normalizePsd(psd: Psd, name: string, options: NormalizeOpt
       }
       if (!node.raster && node.kind === 'image') {
         if (!drawableBounds(bounds) && !source.adjustment) addIssue(node, 'EMPTY_LAYER', '保留空图层的名称与结构。', 'info');
-        else addIssue(node, 'MISSING_LAYER_PIXELS', source.adjustment ? '调整图层无法单独转换为图片；已记录参数并保留整图对照。' : '此图层没有可读取的缓存像素，已记录其源结构。');
+        else addIssue(node, 'MISSING_LAYER_PIXELS', source.adjustment ? '调整图层无法单独转换为图片；已记录参数，请对照源 PSD / PSB 文件复核。' : '此图层没有可读取的缓存像素，已记录其源结构。');
       }
       if (source.adjustment) { node.metadata!.adjustment = cleanMetadata(source.adjustment); node.unsupported!.push(`调整图层“${source.adjustment.type}”需要 Photoshop 合成结果`); }
       if (source.vectorFill?.type === 'noise' || source.vectorFill?.type === 'pattern') addIssue(node, 'RASTER_GRADIENT_PATTERN', '杂色渐变或图案通过源缓存像素导入。', 'info');
@@ -217,7 +217,7 @@ export async function normalizePsd(psd: Psd, name: string, options: NormalizeOpt
     }
     if (node.kind === 'image' && node.strokes?.length) {
       node.strokes = []; node.strokeWeight = undefined; node.strokeAlign = undefined;
-      node.unsupported!.push('图片轮廓描边不映射为矩形边框，已保留源参数和整图对照');
+      node.unsupported!.push('图片轮廓描边不映射为矩形边框，已保留源参数，请对照源 PSD / PSB 文件复核');
     }
     if (node.kind === 'image' || node.kind === 'text') {
       for (const overlay of [...(source.effects?.solidFill || []), ...(source.effects?.gradientOverlay || [])]) {

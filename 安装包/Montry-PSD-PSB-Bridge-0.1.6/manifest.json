@@ -1,0 +1,11 @@
+{
+  "name": "Montry · PSD / PSB Bridge",
+  "id": "a80214a9-5a59-4a0c-9428-2ff65637b34f",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "relaunchButtons": [{"command":"a80214a9-5a59-4a0c-9428-2ff65637b34f","name":"重新导入 PSD / PSB"}],
+  "networkAccess": { "allowedDomains": ["none"] }
+}

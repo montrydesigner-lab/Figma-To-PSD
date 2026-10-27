@@ -137,18 +137,18 @@ const sourceText = fs.readFileSync(path.join(root, 'src/ui.ts'), 'utf8');
 const version = sourceText.match(/version:\s*['"]([\d.]+)['"]/)?.[1];
 assert.ok(version, 'Version is available for the simulated host handshake');
 const uiBuild = await build({
-  stdin: { contents: sourceText + '\nglobalThis.testFontUI = { renderFonts, setBusy, startImport, setSource(value) { source = value; }, getMap() { return fontMap; }, getFonts() { return fonts; } };', loader: 'ts', resolveDir: path.join(root, 'src') },
+  stdin: { contents: sourceText + '\nglobalThis.testFontUI = { renderFonts, setBusy, startImport, chooseFile, getMap() { return fontMap; }, getFonts() { return fonts; } };', loader: 'ts', resolveDir: path.join(root, 'src') },
   bundle: true, write: false, platform: 'browser',
   plugins: [{ name: 'font-search-fixture-pipeline', setup(builder) {
     builder.onResolve({ filter: /^\.\/pipeline$/ }, () => ({ path: 'pipeline', namespace: 'fixture' }));
-    builder.onLoad({ filter: /.*/, namespace: 'fixture' }, () => ({ contents: `export async function inspectFile() { throw new Error('not exercised'); } export async function convertPsd() { return { name: 'tiny.psd', width: 8, height: 8, layers: [], report: [] }; }`, loader: 'js' }));
+    builder.onLoad({ filter: /.*/, namespace: 'fixture' }, () => ({ contents: `export async function inspectFile() { return globalThis.testFixture; } export async function convertPsd() { return { name: 'tiny', width: 8, height: 8, layers: [], report: [] }; }`, loader: 'js' }));
   } }],
 });
 const windowHandlers = {};
 const requests = [];
 const parent = { postMessage({ pluginMessage: message }) {
   requests.push(message);
-  const result = message.type === 'fonts' ? { fonts: [...fonts] } : message.type === 'import' ? { frameId: 'mock-fonts' } : { protocol: 2, version, handlerRegistered: true };
+  const result = message.type === 'fonts' ? { fonts: [...fonts] } : message.type === 'import' ? { frameId: 'mock-fonts', terminal: true, status: 'success' } : message.type === 'begin' ? { targetPageId: 'font-page' } : message.type === 'cancel' ? { terminal: true, status: 'cancelled' } : { protocol: 3, version, handlerRegistered: true };
   queueMicrotask(() => windowHandlers.message({ source: null, data: { pluginMessage: { type: 'ack', requestId: message.requestId, ok: true, result } } }));
 } };
 const context = vm.createContext({ console, crypto: webcrypto, Uint32Array, Uint8Array, Map, Set, Date, Math, Error, Blob, URL, parent, setTimeout, clearTimeout,
@@ -159,7 +159,8 @@ const api = context.testFontUI;
 assert.equal(api.getFonts().length, fonts.length, 'Available-font handshake completed');
 const fixture = { name: 'tiny.psd', psd: {}, summary: { width: 8, height: 8, layers: 3, textLayers: 3, imageLayers: 0, groups: 0, hiddenLayers: 1,
   fonts: ['Arial', 'Uninstalled Source', 'Hidden Source'], visibleFonts: ['Arial', 'Uninstalled Source'], warnings: [] } };
-api.setSource(fixture); api.renderFonts();
+context.testFixture = fixture;
+await api.chooseFile({ name: fixture.name, size: 64 }); api.renderFonts();
 const rows = () => el('font-list').querySelectorAll('.font-row');
 const control = (row, selector) => { const found = row.querySelector(selector); assert.ok(found, `Font row contains ${selector}`); return found; };
 const search = row => control(row, 'input');

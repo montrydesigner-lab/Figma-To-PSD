@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "runtime": "Chromium, 440×680, real UI/parser with only synthetic small files and mocked Figma parent",
+  "tests": [
+    {
+      "name": "Initial empty state, disabled import, no reference switch or horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Invalid PSD produces readable error, records failed item and blocks import",
+      "passed": true
+    },
+    {
+      "name": "Real small PSB preflight preserves stats, fonts, search and clear with no overflow",
+      "passed": true
+    },
+    {
+      "name": "Cancel stays locked until terminal host ACK, then releases parsed source",
+      "passed": true
+    },
+    {
+      "name": "Fixture click → begin → binary assets → import → compact downloadable report; source released",
+      "passed": true,
+      "assetCount": 4,
+      "documentName": "layered-fixture"
+    },
+    {
+      "name": "Cancel while ping ACK missing waits terminal confirmation and ignores late ACK",
+      "passed": true
+    },
+    {
+      "name": "Cancel while begin ACK missing waits terminal confirmation and ignores late ACK",
+      "passed": true
+    },
+    {
+      "name": "Cancel while asset ACK missing waits terminal confirmation and ignores late ACK",
+      "passed": true
+    },
+    {
+      "name": "Cancel while import ACK missing waits terminal confirmation and ignores late ACK",
+      "passed": true
+    },
+    {
+      "name": "Fresh re-selection succeeds after cancelled ping/begin/asset/import",
+      "passed": true
+    },
+    {
+      "name": "Real-parser multi-select imports same-name files serially, skips corrupt middle item and reuses confirmed fonts",
+      "passed": true
+    },
+    {
+      "name": "Disconnected preflight pauses in 8 seconds before begin/conversion/assets",
+      "passed": true
+    },
+    {
+      "name": "No uncaught browser errors",
+      "passed": true
+    }
+  ]
+}

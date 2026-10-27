@@ -562,28 +562,25 @@
         issue(layer, "CLIPPING_APPROXIMATION", "\u526A\u8D34\u6808\u5DF2\u8F6C\u4E3A Figma \u900F\u660E\u5EA6\u8499\u7248\uFF1BPhotoshop \u7684\u7279\u6B8A\u6DF7\u5408\uFF0F\u586B\u5145\u4E0D\u900F\u660E\u5EA6\u884C\u4E3A\u53EF\u80FD\u6709\u5DEE\u5F02\u3002", "info");
       }
     }
-    let main, reference;
+    let main;
     try {
-      const page = api.currentPage;
-      const right = page.children.reduce((max, n) => Math.max(max, n.x + n.width), 0);
-      main = frame(`${document.name} \xB7 \u53EF\u7F16\u8F91`, document.width, document.height);
+      const page = callbacks.targetPage || api.currentPage;
+      if (page.removed) throw new Error("\u672C\u6279\u6B21\u76EE\u6807\u9875\u9762\u5DF2\u5220\u9664\uFF0C\u8BF7\u505C\u6B62\u961F\u5217\u5E76\u5728\u6709\u6548\u9875\u9762\u91CD\u65B0\u5F00\u59CB\u3002");
+      const right = page.children.reduce((max, n) => {
+        const bounds = n.absoluteBoundingBox;
+        const edge = bounds ? bounds.x + bounds.width : n.x + n.width;
+        return Number.isFinite(edge) ? Math.max(max, edge) : max;
+      }, 0);
+      main = frame(callbacks.frameName || `${document.name} \xB7 \u53EF\u7F16\u8F91`, document.width, document.height);
       page.appendChild(main);
       main.x = Math.ceil(right + 160);
       main.y = 0;
       main.clipsContent = true;
       await children(document.layers, main, 0, 0);
-      if (options.includeReference && ((_a = document.composite) == null ? void 0 : _a.tiles.length)) {
-        reference = frame(`${document.name} \xB7 \u539F\u59CB\u5408\u6210\u9884\u89C8`, document.width, document.height);
-        page.appendChild(reference);
-        reference.x = main.x + document.width + 160;
-        reference.y = main.y;
-        reference.clipsContent = true;
-        addRaster(document.composite, reference, 0, 0, "\u539F\u59CB\u5408\u6210\u56FE");
-        reference.locked = true;
-      } else if (options.includeReference) issue(void 0, "NO_REFERENCE", "\u6E90\u6587\u4EF6\u6CA1\u6709\u53EF\u7528\u5408\u6210\u9884\u89C8\uFF1B\u672A\u521B\u5EFA\u539F\u56FE\u5BF9\u7167\u753B\u677F\u3002");
       checkCancel();
-      if (counts.texts) issue(void 0, "TEXT_METRICS_REVIEW", "\u6587\u5B57\u4FDD\u7559\u53EF\u7F16\u8F91\uFF1BPhotoshop \u4E0E Figma \u7684\u5B57\u4F53\u6392\u7248\u3001\u5B57\u5F62\u8FB9\u754C\u548C\u884C\u8DDD\u53EF\u80FD\u4E0D\u540C\uFF0C\u8BF7\u7528\u539F\u59CB\u5408\u6210\u9884\u89C8\u590D\u6838\u3002", "info");
-      return { frameId: main.id, referenceFrameId: reference == null ? void 0 : reference.id, createdNodeIds: [...new Set(created.map((n) => n.id))], removedNodeIds: created.filter((n) => n.removed).map((n) => n.id), width: document.width, height: document.height, report, missingFonts, counts };
+      if (counts.texts) issue(void 0, "TEXT_METRICS_REVIEW", "\u6587\u5B57\u4FDD\u7559\u53EF\u7F16\u8F91\uFF1BPhotoshop \u4E0E Figma \u7684\u5B57\u4F53\u6392\u7248\u3001\u5B57\u5F62\u8FB9\u754C\u548C\u884C\u8DDD\u53EF\u80FD\u4E0D\u540C\uFF0C\u8BF7\u5BF9\u7167\u6E90 PSD / PSB \u6587\u4EF6\u590D\u6838\u3002", "info");
+      (_a = callbacks.onCommitted) == null ? void 0 : _a.call(callbacks, main);
+      return { frameId: main.id, createdNodeIds: [...new Set(created.map((n) => n.id))], removedNodeIds: created.filter((n) => n.removed).map((n) => n.id), width: document.width, height: document.height, report, missingFonts, counts };
     } catch (error) {
       for (let i = created.length - 1; i >= 0; i--) {
         const node = created[i];
@@ -594,13 +591,20 @@
           }
         }
       }
+      if (created.some((node) => !node.removed)) throw new ImportRollbackError(`\u672C\u6B21\u56FE\u5C42\u56DE\u6EDA\u672A\u5B8C\u6210\uFF1B\u961F\u5217\u5DF2\u505C\u6B62\uFF0C\u8BF7\u68C0\u67E5\u672C\u8F6E\u6B8B\u7559\u5185\u5BB9\u540E\u5173\u95ED\u5E76\u91CD\u65B0\u6253\u5F00\u63D2\u4EF6\u3002\u539F\u59CB\u9519\u8BEF\uFF1A${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
-  var MAX_DIMENSION, MAX_LAYERS, MAX_TILES, MAX_CHARACTERS, BLENDS, copy, nativePaints, normal, fontId, sourceId, styleKey;
+  var ImportRollbackError, MAX_DIMENSION, MAX_LAYERS, MAX_TILES, MAX_CHARACTERS, BLENDS, copy, nativePaints, normal, fontId, sourceId, styleKey;
   var init_importer = __esm({
     "src/importer.ts"() {
       "use strict";
+      ImportRollbackError = class extends Error {
+        constructor() {
+          super(...arguments);
+          this.rollbackFailed = true;
+        }
+      };
       MAX_DIMENSION = 3e5;
       MAX_LAYERS = 5e4;
       MAX_TILES = 1e5;
@@ -620,14 +624,47 @@
     "src/code.ts"() {
       init_importer();
       var session;
-      var bootState = { version: "0.1.4", protocol: 2, mainLoaded: true, handlerRegistered: true, bootId: `host-${Date.now()}-${Math.random().toString(36).slice(2)}`, timerAvailable: typeof setTimeout === "function" };
+      var batch;
+      var clientId = "";
+      var highWater = 0;
+      var terminals = /* @__PURE__ */ new Map();
+      var bootState = { version: "0.1.6", protocol: 3, mainLoaded: true, handlerRegistered: true, bootId: `host-${Date.now()}-${Math.random().toString(36).slice(2)}`, timerAvailable: typeof setTimeout === "function" };
       var relaunchCommand = "a80214a9-5a59-4a0c-9428-2ff65637b34f";
       var errorText = (e) => e instanceof Error ? e.message : String(e);
       var reply = (requestId, ok, result, error) => figma.ui.postMessage(__spreadValues(__spreadValues({ type: "ack", requestId, ok }, result !== void 0 ? { result } : {}), error ? { error } : {}));
+      var validId = (value) => typeof value === "string" && value.length > 0 && value.length <= 200;
+      var receiptKey = (id, sequence) => `${sequence}:${id}`;
+      function ticket(msg) {
+        if (!validId(msg.clientId) || clientId && msg.clientId !== clientId) throw new Error("\u9762\u677F\u4F1A\u8BDD\u8EAB\u4EFD\u4E0D\u5339\u914D\uFF0C\u8BF7\u5173\u95ED\u5E76\u91CD\u65B0\u6253\u5F00\u63D2\u4EF6\u3002");
+        if (!Number.isSafeInteger(msg.sessionSequence) || msg.sessionSequence < 1) throw new Error("\u5BFC\u5165\u5E8F\u53F7\u65E0\u6548\uFF0C\u8BF7\u91CD\u65B0\u6253\u5F00\u63D2\u4EF6\u3002");
+        return msg.sessionSequence;
+      }
+      function remember(id, sequence, terminal) {
+        terminals.set(receiptKey(id, sequence), terminal);
+        while (terminals.size > 128) terminals.delete(terminals.keys().next().value);
+      }
+      function settle(active, terminal) {
+        active.hashes = /* @__PURE__ */ Object.create(null);
+        active.bytes = 0;
+        active.importing = false;
+        if (terminal.terminal) {
+          remember(active.id, active.sequence, terminal);
+          if (session === active) session = void 0;
+        } else active.blocked = terminal;
+        active.finish(terminal);
+      }
       function current(id) {
         if (!session || session.id !== id) throw new Error("\u5BFC\u5165\u4F1A\u8BDD\u5DF2\u8FC7\u671F\uFF0C\u8BF7\u91CD\u65B0\u9009\u62E9\u6587\u4EF6\u3002");
+        if (session.blocked) throw new Error(session.blocked.error);
         if (session.cancelled) throw new Error("\u6B64\u5BFC\u5165\u4F1A\u8BDD\u5DF2\u53D6\u6D88\u3002");
         return session;
+      }
+      function safeFrameName(page, name) {
+        const clean = name.replace(/[<>:"/\\|?*\x00-\x1f\x7f]/g, "_").trim().slice(0, 160) || "PSD";
+        const existing = new Set(page.children.map((node) => node.name));
+        let result = `${clean} \xB7 \u53EF\u7F16\u8F91`, index = 2;
+        while (existing.has(result)) result = `${clean} (${index++}) \xB7 \u53EF\u7F16\u8F91`;
+        return result;
       }
       figma.ui.onmessage = async (message) => {
         var _a, _b, _c;
@@ -645,19 +682,52 @@
             return;
           }
           if (msg.type === "begin") {
-            if (session == null ? void 0 : session.importing) throw new Error("\u5DF2\u6709\u5BFC\u5165\u6B63\u5728\u8FD0\u884C\uFF0C\u8BF7\u5148\u53D6\u6D88\u6216\u7B49\u5F85\u5B8C\u6210\u3002");
-            if (typeof msg.sessionId !== "string" || !msg.sessionId || msg.sessionId.length > 200) throw new Error("\u5BFC\u5165\u4F1A\u8BDD ID \u65E0\u6548\u3002");
-            if (typeof msg.name !== "string" || typeof msg.width !== "number" || typeof msg.height !== "number" || !Number.isFinite(msg.width) || !Number.isFinite(msg.height) || msg.width < 1 || msg.height < 1 || msg.width > 3e5 || msg.height > 3e5) throw new Error("\u6587\u4EF6\u540D\u79F0\u6216\u753B\u5E03\u5C3A\u5BF8\u65E0\u6548\u3002");
-            session = { id: msg.sessionId, name: msg.name, width: msg.width, height: msg.height, hashes: /* @__PURE__ */ Object.create(null), cancelled: false, importing: false, bytes: 0 };
-            reply(requestId, true);
+            if (session) throw new Error(((_a = session.blocked) == null ? void 0 : _a.error) || "\u5DF2\u6709\u5BFC\u5165\u6B63\u5728\u8FD0\u884C\uFF0C\u8BF7\u5148\u53D6\u6D88\u5E76\u7B49\u5F85\u7EC8\u6001\u786E\u8BA4\u6216\u7B49\u5F85\u5B8C\u6210\u3002");
+            if (!validId(msg.sessionId)) throw new Error("\u5BFC\u5165\u4F1A\u8BDD ID \u65E0\u6548\u3002");
+            const sequence = ticket(msg);
+            if (sequence <= highWater) throw new Error("\u6B64\u5BFC\u5165\u5E8F\u53F7\u5DF2\u5904\u7406\u6216\u53D6\u6D88\uFF1B\u8BF7\u4E3A\u91CD\u8BD5\u521B\u5EFA\u65B0\u7684\u4F1A\u8BDD\u3002");
+            if (msg.batchId !== void 0 && !validId(msg.batchId)) throw new Error("\u6279\u6B21 ID \u65E0\u6548\u3002");
+            if (typeof msg.name !== "string" || msg.name.length > 2048 || typeof msg.width !== "number" || typeof msg.height !== "number" || !Number.isFinite(msg.width) || !Number.isFinite(msg.height) || msg.width < 1 || msg.height < 1 || msg.width > 3e5 || msg.height > 3e5) throw new Error("\u6587\u4EF6\u540D\u79F0\u6216\u753B\u5E03\u5C3A\u5BF8\u65E0\u6548\u3002");
+            const batchId = msg.batchId || msg.sessionId;
+            if (!batch || batch.id !== batchId) batch = { id: batchId, page: figma.currentPage };
+            if (!batch.page || batch.page.removed) throw new Error("\u672C\u6279\u6B21\u76EE\u6807\u9875\u9762\u4E0D\u53EF\u7528\uFF0C\u8BF7\u5728\u6709\u6548\u9875\u9762\u91CD\u65B0\u5F00\u59CB\u3002");
+            clientId = msg.clientId;
+            highWater = sequence;
+            let finish;
+            const finished = new Promise((resolve) => {
+              finish = resolve;
+            });
+            session = { id: msg.sessionId, sequence, name: msg.name, width: msg.width, height: msg.height, hashes: /* @__PURE__ */ Object.create(null), cancelled: false, importing: false, bytes: 0, page: batch.page, finished, finish };
+            reply(requestId, true, { targetPageId: batch.page.id });
             return;
           }
           if (msg.type === "cancel") {
-            if (session && session.id === msg.sessionId) {
-              session.cancelled = true;
-              if (!session.importing) session = void 0;
+            if (!validId(msg.sessionId)) throw new Error("\u53D6\u6D88\u8BF7\u6C42\u7684\u4F1A\u8BDD ID \u65E0\u6548\u3002");
+            const sequence = ticket(msg);
+            const active = session;
+            if (active && active.id === msg.sessionId) {
+              if (sequence !== active.sequence) throw new Error("\u53D6\u6D88\u8BF7\u6C42\u7684\u5BFC\u5165\u5E8F\u53F7\u4E0D\u5339\u914D\u3002");
+              if (active.blocked) {
+                reply(requestId, true, active.blocked);
+                return;
+              }
+              active.cancelled = true;
+              if (!active.importing) settle(active, { terminal: true, status: "cancelled" });
+              reply(requestId, true, await active.finished);
+            } else {
+              let terminal = terminals.get(receiptKey(msg.sessionId, sequence));
+              if (!terminal) {
+                if (sequence <= highWater) {
+                  terminal = { terminal: false, status: "unknown", error: "\u65E0\u6CD5\u786E\u8BA4\u6B64\u65E7\u4F1A\u8BDD\u7EC8\u6001\uFF1B\u8BF7\u68C0\u67E5\u753B\u5E03\u540E\u5173\u95ED\u5E76\u91CD\u65B0\u6253\u5F00\u63D2\u4EF6\u3002" };
+                } else {
+                  clientId = msg.clientId;
+                  highWater = sequence;
+                  terminal = { terminal: true, status: "cancelled" };
+                  remember(msg.sessionId, sequence, terminal);
+                }
+              }
+              reply(requestId, true, terminal);
             }
-            reply(requestId, true);
             return;
           }
           if (msg.type === "asset") {
@@ -679,28 +749,43 @@
             const document = msg.document;
             if ((document == null ? void 0 : document.width) !== active.width || (document == null ? void 0 : document.height) !== active.height || (document == null ? void 0 : document.name) !== active.name) throw new Error("\u6587\u6863\u4E0E\u5F53\u524D\u5BFC\u5165\u4F1A\u8BDD\u4E0D\u4E00\u81F4\u3002");
             active.importing = true;
-            const options = { includeReference: ((_a = msg.options) == null ? void 0 : _a.includeReference) !== false, keepTextBackup: ((_b = msg.options) == null ? void 0 : _b.keepTextBackup) !== false, fontMap: ((_c = msg.options) == null ? void 0 : _c.fontMap) || {} };
+            const options = { includeReference: false, keepTextBackup: ((_b = msg.options) == null ? void 0 : _b.keepTextBackup) !== false, fontMap: ((_c = msg.options) == null ? void 0 : _c.fontMap) || {} };
+            let committed = false;
             try {
+              let viewportError = "";
               const result = await importDocument(figma, document, active.hashes, options, {
+                targetPage: active.page,
+                frameName: safeFrameName(active.page, active.name),
                 isCancelled: () => active.cancelled,
                 onProgress: (completed, total, name) => figma.ui.postMessage({ type: "progress", sessionId: active.id, completed, total, name, done: completed, label: name }),
-                yieldControl: () => new Promise((resolve) => setTimeout(resolve, 0))
-              });
-              try {
-                const frame = await figma.getNodeByIdAsync(result.frameId);
-                if (frame && "x" in frame) {
-                  frame.setRelaunchData({ [relaunchCommand]: "\u7EE7\u7EED\u5BFC\u5165 PSD / PSB" });
-                  figma.currentPage.selection = [frame];
-                  figma.viewport.scrollAndZoomIntoView([frame]);
+                yieldControl: () => new Promise((resolve) => setTimeout(resolve, 0)),
+                onCommitted: (frame) => {
+                  try {
+                    frame.setRelaunchData({ [relaunchCommand]: "\u7EE7\u7EED\u5BFC\u5165 PSD / PSB" });
+                    if (figma.currentPage === active.page) {
+                      active.page.selection = [frame];
+                      figma.viewport.scrollAndZoomIntoView([frame]);
+                    }
+                  } catch (error) {
+                    viewportError = errorText(error);
+                  }
                 }
-              } catch (e) {
-                result.report.push({ severity: "info", code: "VIEWPORT_UNCHANGED", message: `\u56FE\u5C42\u5DF2\u5BFC\u5165\uFF1B\u5B9A\u4F4D\u753B\u5E03\u5931\u8D25\uFF1A${errorText(e)}` });
+              });
+              if (viewportError) result.report.push({ severity: "info", code: "VIEWPORT_UNCHANGED", message: `\u56FE\u5C42\u5DF2\u5BFC\u5165\uFF1B\u5B9A\u4F4D\u753B\u5E03\u5931\u8D25\uFF1A${viewportError}` });
+              const terminal = { terminal: true, status: "success", result: { frameId: result.frameId, counts: result.counts, targetPageId: active.page.id } };
+              settle(active, terminal);
+              committed = true;
+              reply(requestId, true, __spreadProps(__spreadValues({}, result), { terminal: true, status: "success", targetPageId: active.page.id }));
+              figma.ui.postMessage({ type: "complete", sessionId: active.id, result: terminal.result });
+            } catch (error) {
+              if (committed) {
+                console.warn("PSD Bridge: committed result could not reach UI:", errorText(error));
+                return;
               }
-              reply(requestId, true, result);
-              figma.ui.postMessage({ type: "complete", sessionId: active.id, result });
-            } finally {
-              active.importing = false;
-              if (session === active) session = void 0;
+              const rollbackFailed = error instanceof ImportRollbackError;
+              const terminal = { terminal: !rollbackFailed, status: rollbackFailed ? "failed" : active.cancelled ? "cancelled" : "failed", error: errorText(error).slice(0, 2e3) };
+              settle(active, terminal);
+              reply(requestId, false, terminal, terminal.error);
             }
             return;
           }

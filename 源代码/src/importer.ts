@@ -1,7 +1,8 @@
 import type { BridgeDocument, BridgeLayer, BridgeText, BridgeTextRun, Issue, Raster } from './types';
 
 export interface ImportOptions {
-  includeReference: boolean;
+  /** Legacy option accepted for older callers; comparison artboards are no longer imported. */
+  includeReference?: boolean;
   keepTextBackup: boolean;
   fontMap: Record<string, FontName>;
 }
@@ -9,11 +10,18 @@ export interface ImportCallbacks {
   onProgress?: (completed: number, total: number, name: string) => void;
   isCancelled?: () => boolean;
   yieldControl?: () => Promise<void>;
+  /** Queue-owned destination; independent of page switches while importing. */
+  targetPage?: PageNode;
+  frameName?: string;
+  onCommitted?: (frame: FrameNode) => void;
+}
+/** The caller must keep its queue blocked when rollback cannot be confirmed. */
+export class ImportRollbackError extends Error {
+  readonly rollbackFailed = true;
 }
 export interface FontSubstitution { source: string; replacement: FontName; reason: string }
 export interface ImportResult {
   frameId: string;
-  referenceFrameId?: string;
   createdNodeIds: string[];
   removedNodeIds: string[];
   width: number;
@@ -430,23 +438,25 @@ export async function importDocument(api: PluginAPI, document: BridgeDocument, h
       issue(layer, 'CLIPPING_APPROXIMATION', '剪贴栈已转为 Figma 透明度蒙版；Photoshop 的特殊混合／填充不透明度行为可能有差异。', 'info');
     }
   }
-  let main: FrameNode | undefined, reference: FrameNode | undefined;
+  let main: FrameNode | undefined;
   try {
-    const page = api.currentPage;
-    const right = page.children.reduce((max, n) => Math.max(max, n.x + n.width), 0);
-    main = frame(`${document.name} · 可编辑`, document.width, document.height);
+    const page = callbacks.targetPage || api.currentPage;
+    if (page.removed) throw new Error('本批次目标页面已删除，请停止队列并在有效页面重新开始。');
+    const right = page.children.reduce((max, n) => {
+      const bounds = n.absoluteBoundingBox;
+      const edge = bounds ? bounds.x + bounds.width : n.x + n.width;
+      return Number.isFinite(edge) ? Math.max(max, edge) : max;
+    }, 0);
+    main = frame(callbacks.frameName || `${document.name} · 可编辑`, document.width, document.height);
     page.appendChild(main); main.x = Math.ceil(right + 160); main.y = 0; main.clipsContent = true;
     await children(document.layers, main, 0, 0);
-    if (options.includeReference && document.composite?.tiles.length) {
-      reference = frame(`${document.name} · 原始合成预览`, document.width, document.height);
-      page.appendChild(reference); reference.x = main.x + document.width + 160; reference.y = main.y; reference.clipsContent = true;
-      addRaster(document.composite, reference, 0, 0, '原始合成图'); reference.locked = true;
-    } else if (options.includeReference) issue(undefined, 'NO_REFERENCE', '源文件没有可用合成预览；未创建原图对照画板。');
     checkCancel();
-    if (counts.texts) issue(undefined, 'TEXT_METRICS_REVIEW', '文字保留可编辑；Photoshop 与 Figma 的字体排版、字形边界和行距可能不同，请用原始合成预览复核。', 'info');
-    return { frameId: main.id, referenceFrameId: reference?.id, createdNodeIds: [...new Set(created.map(n => n.id))], removedNodeIds: created.filter(n => n.removed).map(n => n.id), width: document.width, height: document.height, report, missingFonts, counts };
+    if (counts.texts) issue(undefined, 'TEXT_METRICS_REVIEW', '文字保留可编辑；Photoshop 与 Figma 的字体排版、字形边界和行距可能不同，请对照源 PSD / PSB 文件复核。', 'info');
+    callbacks.onCommitted?.(main);
+    return { frameId: main.id, createdNodeIds: [...new Set(created.map(n => n.id))], removedNodeIds: created.filter(n => n.removed).map(n => n.id), width: document.width, height: document.height, report, missingFonts, counts };
   } catch (error) {
     for (let i = created.length - 1; i >= 0; i--) { const node = created[i]; if (!node.removed) { try { node.remove(); } catch { /* A removed ancestor already owns this descendant. */ } } }
+    if (created.some(node => !node.removed)) throw new ImportRollbackError(`本次图层回滚未完成；队列已停止，请检查本轮残留内容后关闭并重新打开插件。原始错误：${error instanceof Error ? error.message : String(error)}`);
     throw error;
   }
 }

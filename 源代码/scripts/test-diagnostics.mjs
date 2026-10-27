@@ -14,7 +14,7 @@ function boot(host = null) {
  const ack=(requestId,result,source=top)=>handlers.message({source,origin:'https://www.figma.com',data:{pluginMessage:{type:'ack',requestId,ok:true,result}}});
  return {state,handlers,nodes,requests,timers,ack,window,parent,top};
 }
-const host={version:'0.1.4',handlerRegistered:true,mainLoaded:true,protocol:2,bootId:'fixture'};
+const host={version:'0.1.6',handlerRegistered:true,mainLoaded:true,protocol:3,bootId:'fixture'};
 for(const kind of ['parent','top','self','null','relay','undefined']) {
  const b=boot(host);const source=kind==='parent'?b.parent:kind==='top'?b.top:kind==='self'?b.window:kind==='null'?null:kind==='undefined'?undefined:{};
  // Override ack default to test actual undefined MessageEvent source.
@@ -48,7 +48,7 @@ tests.push('Built UI includes independent diagnostic script before application a
  vm.runInNewContext(fs.readFileSync('dist/code.js','utf8'),{figma,__html__:'<script>var boot = /*PSD_BRIDGE_BOOT*/null;</script>',console},{timeout:1000});
  assert.ok(!rendered.includes('/*PSD_BRIDGE_BOOT*/null'));
  const injected=JSON.parse(rendered.slice(rendered.indexOf('{'),rendered.lastIndexOf('}')+1));
- assert.equal(injected.version,'0.1.4');assert.equal(injected.handlerRegistered,true);assert.equal(injected.mainLoaded,true);assert.equal(injected.timerAvailable,false);
+ assert.equal(injected.version,'0.1.6');assert.equal(injected.handlerRegistered,true);assert.equal(injected.mainLoaded,true);assert.equal(injected.timerAvailable,false);
  tests.push('Real main bundle injects marker after handler registration; startup works even without browser timers');
 }
 const result={passed:true,scope:'Node VM of standalone diagnostic script with synthetic host/timers; not a live Figma result',tests};fs.writeFileSync('test-output/diagnostics-tests.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));

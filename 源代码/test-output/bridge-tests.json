@@ -10,9 +10,9 @@
     "No UI event.source, request timeout, cancellation UI, or cloud bootstrap behavior is tested here."
   ],
   "bundle": {
-    "path": "dist/code.js",
-    "bytes": 43658,
-    "sha256": "dbaf9fc19b7b61a02775d77963fdf8a264690473886fa1cffb8d9a5638f0fe36"
+    "path": "dist\\code.js",
+    "bytes": 49100,
+    "sha256": "82122395f007bad9f5aaf179bf596041ab545413eda31c29c4d59640c2b405bb"
   },
   "tests": [
     {
@@ -36,7 +36,7 @@
       "passed": true
     },
     {
-      "name": "A replacement begin invalidates a previous idle session and retains only the replacement session",
+      "name": "A second begin cannot replace an idle session; explicit terminal cancellation permits the next session",
       "passed": true
     },
     {

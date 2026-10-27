@@ -1,12 +1,14 @@
 {
   "name": "psd-to-figma",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "Offline PSD/PSB to editable Figma layers",
   "scripts": {
-    "test": "node scripts/test-fixtures.mjs && node scripts/test-importer.mjs && node scripts/test-raster-effects.mjs && node scripts/test-text-paths.mjs && node scripts/test-bridge.mjs && node scripts/test-ui-transport.mjs && node scripts/test-hidden.mjs && node scripts/test-diagnostics.mjs && node scripts/test-font-search.mjs && node scripts/test-source-reset.mjs && node scripts/test-input-guard.mjs",
+    "test": "node scripts/test-fixtures.mjs && node scripts/test-importer.mjs && node scripts/test-raster-effects.mjs && node scripts/test-text-paths.mjs && node scripts/test-bridge.mjs && node scripts/test-ui-transport.mjs && node scripts/test-hidden.mjs && node scripts/test-diagnostics.mjs && node scripts/test-font-search.mjs && node scripts/test-source-reset.mjs && node scripts/test-input-guard.mjs && node scripts/test-no-reference.mjs && node scripts/test-queue-host.mjs",
     "build": "node scripts/build.mjs",
     "typecheck": "tsc -p tsconfig.json",
-    "test:ui": "node scripts/test-ui.mjs"
+    "test:ui": "node scripts/test-ui.mjs",
+    "test:queue-ui": "node scripts/test-queue-ui.mjs",
+    "package": "node scripts/package-release.mjs"
   },
   "keywords": [],
   "author": "",

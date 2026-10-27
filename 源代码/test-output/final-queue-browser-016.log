@@ -1,0 +1,43 @@
+
+> psd-to-figma@0.1.6 test:queue-ui
+> node scripts/test-queue-ui.mjs
+
+PASS One selected file preserves preflight, import and report while releasing decoded references
+PASS Multiple selection reads only first preflight; duplicate starts keep read/convert/host concurrency one
+PASS Multi-file drag/drop preserves every item including same-name files
+PASS Metadata preflight rejects unsupported, empty and over-limit files without reading them
+PASS A corrupted middle file fails independently and is retryable without reimporting successes
+PASS Confirmed missing-font choices and search survive next file; new missing font pauses only that item
+PASS Confirmed Auto keeps the existing host fallback and reuses the actual returned font next time
+PASS Cancel current waits for final rollback ACK before reading next file and rejects stale progress/ACK
+PASS An import ACK without terminal status reconciles and pauses; committed success survives explicit continuation
+PASS Stop all preserves committed files, cancels remaining jobs, and permits clean restart
+PASS Unconfirmed rollback locks restart, retry, clearing and next-file reads
+PASS Missing cancellation terminal ACK times out into a locked state and never pre-reads the next file
+PASS Clearing during a held preflight cannot start overlapping reads and discards late source
+PASS Page hide stops an active queue from starting another file
+PASS A pending font catalog blocks start until available mappings can be confirmed
+{
+  "passed": true,
+  "passedCount": 15,
+  "failedCount": 0,
+  "runtime": "Chromium 440x680 using actual UI source/DOM, tiny synthetic File inputs, instrumented parser/converter and mocked Figma host. Does not verify real PSD parsing, real Figma rendering, OS process close, garbage collection timing or large-file memory pressure.",
+  "tests": [
+    "One selected file preserves preflight, import and report while releasing decoded references",
+    "Multiple selection reads only first preflight; duplicate starts keep read/convert/host concurrency one",
+    "Multi-file drag/drop preserves every item including same-name files",
+    "Metadata preflight rejects unsupported, empty and over-limit files without reading them",
+    "A corrupted middle file fails independently and is retryable without reimporting successes",
+    "Confirmed missing-font choices and search survive next file; new missing font pauses only that item",
+    "Confirmed Auto keeps the existing host fallback and reuses the actual returned font next time",
+    "Cancel current waits for final rollback ACK before reading next file and rejects stale progress/ACK",
+    "An import ACK without terminal status reconciles and pauses; committed success survives explicit continuation",
+    "Stop all preserves committed files, cancels remaining jobs, and permits clean restart",
+    "Unconfirmed rollback locks restart, retry, clearing and next-file reads",
+    "Missing cancellation terminal ACK times out into a locked state and never pre-reads the next file",
+    "Clearing during a held preflight cannot start overlapping reads and discards late source",
+    "Page hide stops an active queue from starting another file",
+    "A pending font catalog blocks start until available mappings can be confirmed"
+  ],
+  "failures": []
+}

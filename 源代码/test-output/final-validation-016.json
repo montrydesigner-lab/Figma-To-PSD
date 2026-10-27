@@ -1,0 +1,33 @@
+{
+  "version": "0.1.6",
+  "validatedAt": "2026-10-27T03:16:57.926Z",
+  "typecheck": true,
+  "build": true,
+  "offlineTests": true,
+  "offlineScripts": 13,
+  "browserTests": true,
+  "browserGroups": 13,
+  "queueBrowserTests": true,
+  "queueBrowserGroups": 15,
+  "queueHostGroups": 11,
+  "visualUIReviewed": true,
+  "realFigmaVerified": false,
+  "largeFileStressTest": false,
+  "sourceHashes": {
+    "src/code.ts": "721dd91174e0f382e3ca8265ba4cbf89b09795ae4b70d737275e7d42b9a1cf0a",
+    "src/diagnostics.js": "1ef892209c1fbed6a5a79854edd3fa381f022ed67feed2659a31e30c0e1cabcb",
+    "src/font-search.ts": "ed1148e2a4df4a29ecdafc518d2707420445d096955c1abe582ade7fcb6b5dfe",
+    "src/importer.ts": "8452e0c70747fd02f816621370449c0c9cb9a1c185c1198d643b8b283f51f4cf",
+    "src/normalize.ts": "24c1c6da36132337f3de316c24b51ee1ce93827f4fe81720439832184dba61d1",
+    "src/pipeline.ts": "2e17c627db930b0dace71b014d2b2c939003a1ffc19aefc6addd5e00712b24f6",
+    "src/png.ts": "85e571a0bf2a79a93c141518e9bd6f5ddc57b995de6683b539a67ed79a7cff0f",
+    "src/queue.ts": "720fab699273685495a323b0e87146cac6b06cd4321c5824fb6bbd2e02466bcb",
+    "src/raster-effects.ts": "11651dc20e5dde79b940febb89acda0be228fca50ae19b75d1b49a8d918a6bba",
+    "src/raster.ts": "31a654dc88c35e539f6ca3e8a425a901b7391d5297f983fc3b6cd6f751a244cb",
+    "src/styles.ts": "3cd3444bb75e8345fcb700009bad9cc225ed1d1c2aac1c82eeeb081ff2f5d4ff",
+    "src/text-paths.ts": "f948899b1bbbfe3bd57cd8a8a2a83b563fca6439a25faad59df4ca6c0de6290f",
+    "src/types.ts": "ea5a887a389cd5c9175ee2a0e5071c0dc6bfec8cd558b8532ed9b9c6d1483c1f",
+    "src/ui.html": "2f2eb427172b4d2200a186d6a2fe03d57cec9326ac2ea98db627dd55bc91f7c7",
+    "src/ui.ts": "c0bd0fe7b8305f892628e1be92bd2068dd31c3fefa9670f5756f0d440e390e4e"
+  }
+}
